@@ -3,9 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "react-scripts": "1.0.17"
+    "apollo-client-preset": "^1.0.3",
+    "firebase": "^4.6.2",
+    "graphql": "^0.11.7",
+    "graphql-tag": "^2.5.0",
+    "react": "15.x",
+    "react-apollo": "^2.0.1",
+    "react-dom": "15.x",
+    "react-materialize": "^1.1.0",
+    "react-scripts": "1.0.17",
+    "uuid": "^3.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
