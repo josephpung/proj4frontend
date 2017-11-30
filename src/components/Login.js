@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Row, Input, Col, Preloader } from 'react-materialize'
+import { Row, Input, Col, Preloader, Button } from 'react-materialize'
 
 class Login extends Component {
   constructor (props) {
     super()
+  }
+
+  handleChange = (e) => {
+
   }
   render () {
     return (
@@ -15,17 +19,11 @@ class Login extends Component {
           </Col>
         </Row>
         <Row>
-          <Input s={12} type='select' label='Materialize Select' icon='weekend' defaultValue='2'>
-            <option value='1'>Option 1</option>
-            <option value='2'>Option 2</option>
-            <option value='3'>Option 3</option>
-          </Input>
+            <Input type="email" name='email' label="Email" s={12} onChange={(e) => this.handleChange(e)}/>
+            <Input type="password" name='password' label="Password" s={12} onChange={(e) => this.handleChange(e)}/>
         </Row>
-        <Row>
-          <Input name='group1' type='radio' value='red' label='Red' />
-          <Input name='group1' type='radio' value='yellow' label='Yellow' />
-          <Input name='group1' type='radio' value='green' label='Green' className='with-gap' />
-          <Input name='group1' type='radio' value='brown' label='Brown' disabled='disabled' />
+        <Row className="center">
+            <Button className="black" waves='light'>Login</Button>
         </Row>
       </div>
     )

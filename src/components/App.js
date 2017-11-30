@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import Header from './Header'
 import Main from './Main'
 import { BrowserRouter as Router } from 'react-router-dom'
@@ -6,6 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 
 
 class App extends Component {
+
   render() {
     return (
       <Router>
@@ -20,4 +22,5 @@ class App extends Component {
   }
 }
 
-export default App;
+
+export default App

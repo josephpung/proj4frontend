@@ -5,10 +5,8 @@ import Register from './Register'
 import Login from './Login'
 import Qrcode from './Qrcode'
 import QrGenerator from './QrGenerator'
-import Tables from './tables'
-
-
-
+import Tables from './staff/Tables'
+import Menu from './staff/Menu'
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
 // and /schedule routes will match any pathname that starts
@@ -23,7 +21,7 @@ const Main = (props) => (
       <Route path='/qrcode' component={Qrcode}/>
       <Route path='/qrGenerator' component={QrGenerator}/>
       <Route path='/tables' component={Tables}/>
-
+      <Route path='/menu' component={Menu}/>
     </Switch>
   </main>
 )
