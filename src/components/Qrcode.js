@@ -1,27 +1,37 @@
 import React, { Component } from 'react'
 import QrReader from 'react-qr-reader'
+import { Route, Redirect } from 'react-router-dom'
 
 class Qrcode extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      delay: 300,
-      result: 'No result'
+      delay: 1000,
+      result: 'No result',
+      redirect: false
     }
-    this.handleScan = this.handleScan.bind(this)
   }
-  handleScan (data) {
+  handleScan = (data) => {
     if (data) {
       this.setState({
         result: data
       })
     }
   }
-  handleError (err) {
+  handleError = (err) => {
     console.error(err)
   }
+
+  componentDidUpdate () {
+      if(this.state.result !== 'No result'){
+        this.setState({ redirect: true })
+        console.log('mounted')
+      }
+
+    }
+
   render () {
-    return (
+      return (
       <div>
         <h1>QR Code Scanner Goes here</h1>
         <div style={{ width: '300px', margin: 'auto' }}>
