@@ -4,7 +4,7 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Qrcode from './Qrcode'
-
+import Menu from './Menu'
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
 // and /schedule routes will match any pathname that starts
@@ -17,6 +17,7 @@ const Main = () => (
       <Route path='/register' component={Register}/>
       <Route path='/login' component={Login}/>
       <Route path='/qrcode' component={Qrcode}/>
+      <Route path='/menu' component={Menu}/>
     </Switch>
   </main>
 )
