@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import Home from './Home'
 import Register from './Register'
 import Login from './Login'
+import Qrcode from './Qrcode'
 
 // The Main component renders one of the three provided
 // Routes (provided that one matches). Both the /roster
@@ -15,6 +16,7 @@ const Main = () => (
       <Route exact path='/' component={Home}/>
       <Route path='/register' component={Register}/>
       <Route path='/login' component={Login}/>
+      <Route path='/qrcode' component={Qrcode}/>
     </Switch>
   </main>
 )
