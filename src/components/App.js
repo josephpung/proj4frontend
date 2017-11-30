@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import Nav from './Nav'
+import Header from './Header'
+import Main from './Main'
 
 
 const QUERY = gql`
@@ -76,15 +77,16 @@ class App extends Component {
     })
 
     return (
-      <div>
-        <Nav
-          navProp={navProp}
-        />
+      <div className="App">
+        <Header />
+
+      <div className="container">
+        <Main />
+      </div>
 
         <div className="container">
           <div className="row">
             <h2>Restaurant List</h2>
-
             {
               allRestaurants
             }
@@ -92,14 +94,11 @@ class App extends Component {
         </div>
 
       </div>
-
     )
   } else {
     return (
-      <div>
-        <Nav
-          navProp={navProp}
-        />
+      <div className="App">
+        <Header />
 
         <div className="container">
           <div className="row">
