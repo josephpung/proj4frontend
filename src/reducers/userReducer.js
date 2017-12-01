@@ -1,20 +1,20 @@
-export default function reducer (state = {
-    name: "",
-    email: "",
-    loggedIn: false
+import { getUser } from './userApi'
 
-}, action) {
+const initialState = getUser()
+
+export default function reducer (state = initialState, action) {
   switch (action.type) {
     case 'loginSuccess':{
-      console.log("payload received ><><",action.payload);
-      return state = {
+      // console.log("payload received ><><",action.payload);
+      return {
+        ...state,
         name: action.payload.name,
         email: action.payload.email,
         loggedIn: true
       }
     }
-    case 'CHANGE_AGE':{
-    return {...state, age: action.payload}
+    case 'logoutSuccess':{
+    return {...state, name:"", email:"", loggedIn: false}
     }
     default :
     return {...state}

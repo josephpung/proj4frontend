@@ -14,6 +14,17 @@ export function login(data){
   }
 }
 
+export function logout(){
+  return function (dispatch){
+
+    axios.get("/logout")
+      .then(res=>{
+        dispatch({type: res.data.status, payload: res.data.userData})
+        console.log("logout response from server",res.data);
+      })
+  }
+}
+
 
 // store.dispatch((dispatch)=>{
 //   dispatch({type: "FETCH_USERS_START"})
