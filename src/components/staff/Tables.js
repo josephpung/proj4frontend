@@ -20,15 +20,17 @@ class Tables extends Component {
     return (
       <div>
         <h1>Select Table Order</h1>
-        <div>{
-          [...Array(this.state.tableQuantity)].map((x, i) =>
-            <Col m={1} s={5} key={i}>
-              <Card className='blue-grey darken-1' textClassName='white-text' title='Card title' actions={[<a href='#'>This is a link</a>]}>
-                {i + 1}
-              </Card>
-            </Col>
+        {
+          [...Array(this.state.tableQuantity)].map((tableNumber, i) =>
+            <div key={i}>
+              <Col m={2} s={2} key={i}>
+                <Card className='blue-grey darken-1' textClassName='white-text' actions={[<a>This is a link</a>]}>
+              Table {i + 1}
+                </Card>
+              </Col>
+            </div>
           )
-          }</div>
+          }
       </div>
     )
   }

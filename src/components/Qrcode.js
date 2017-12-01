@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import QrReader from 'react-qr-reader'
-import { Route, Redirect } from 'react-router-dom'
+// import { Route, Redirect } from 'react-router-dom'
 
 class Qrcode extends Component {
   constructor (props) {

@@ -11,7 +11,6 @@ class Header extends Component {
         <li><NavLink to="/login">Login</NavLink></li>
         <li><NavLink to="/register">Register</NavLink></li>
         <li><NavLink to="/qrcode">Scan QR Code</NavLink></li>
-        <li><NavLink to="/qrGenerator">Generate QR Code</NavLink></li>
         <li><NavLink to="/tables">Generate QR Code</NavLink></li>
         </Navbar>
     )

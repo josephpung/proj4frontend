@@ -1,56 +1,109 @@
-import React, { Component } from 'react';
-import { Row, Input, Button} from 'react-materialize'
+import React, { Component } from 'react'
+import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
+
+// hard coded food item model data
+
+const restaurantMenu = [
+  {
+    id: 1,
+    category: 'mains',
+    name: 'Cold Cut Trio',
+    Price: 5
+  },
+  {
+    id: 2,
+    category: 'mains',
+    name: 'Subway Melts',
+    Price: 7
+  },
+  {
+    id: 3,
+    category: 'mains',
+    name: 'Meatball Marinara',
+    Price: 6.50
+  },
+  {
+    id: 4,
+    category: 'appetizer',
+    name: 'Double Chocolate Cookie',
+    Price: 1.50
+  },
+  {
+    id: 5,
+    category: 'drinks',
+    name: 'Dasani Water',
+    Price: 1.50
+  },
+  {
+    id: 6,
+    category: 'drinks',
+    name: 'Coke',
+    Price: 1.50
+  }
+]
 
 class Menu extends Component {
-  render() {
+  constructor (props) {
+    super()
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('hello i am here');
+  }
+  render () {
     return (
       <div>
-      <h1>Menu List</h1>
+        <h1>Order Here</h1>
+        <form>
+          <Tabs className='tab-demo z-depth-1'>
+            <Tab title='Appetizers' active>
+              <Table>
+                <thead>
+                  <tr>
+                    <th data-field='id'>Food Item</th>
+                    <th data-field='name'>Price</th>
+                    <th data-field='price'>Quantity</th>
+                  </tr>
+                </thead>
 
-      <Row>
-        <Input s={6} type='select' label="Food Category" defaultValue='1'>
-		      <option value='1'>Appetizers</option>
-		      <option value='2'>Mains</option>
-		      <option value='3'>Desserts</option>
-	      </Input>
-      </Row>
-
-      <Row>
-        <Input label='Food # 1' name='group1' type='checkbox' value='red'  />
-        <Input s={1} type='select' label="Quantity" defaultValue='0'>
-          <option value='0'>0</option>
-          <option value='1'>1</option>
-          <option value='2'>2</option>
-          <option value='3'>3</option>
-        </Input>
-      </Row>
-
-      <Row>
-        <Input label='Food # 2' name='group1' type='checkbox' value='red'  />
-        <Input s={1} type='select' label="Quantity" defaultValue='1'>
-          <option value='1'>1</option>
-          <option value='2'>2</option>
-          <option value='3'>3</option>
-        </Input>
-      </Row>
-
-      <Row>
-        <Input label='Food # 3' name='group1' type='checkbox' value='red'  />
-        <Input s={1} type='select' label="Quantity" defaultValue='1'>
-          <option value='1'>1</option>
-          <option value='2'>2</option>
-          <option value='3'>3</option>
-        </Input>
-      </Row>
-
-      <Row>
-          <Button waves='light'>Send Orders</Button>
-      </Row>
+                <tbody>
+                  <tr>
+                    <td>Chicken Rice</td>
+                    <td>$0.87</td>
+                    <td>
+                      <Input s={5} type='select' label='Quantity' defaultValue='0'>
+                        <option value='0'>0</option>
+                        <option value='1'>1</option>
+                        <option value='2'>2</option>
+                      </Input>
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab title='Mains'>Test 2</Tab>
+            <Tab title='Drinks'>Test 3</Tab>
+            <Tab title='Desserts'>Test 4</Tab>
+          </Tabs>
+          <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
+        </form>
 
       </div>
     )
   }
-
 }
+
+/* <ul>{restaurantMenu.map((eachItem) =>
+  if(eachItem.category === 'appetizer')
+  <li>{eachItem.name}
+  </li>
+)}
+</ul> */
+// hard coded form data
+//
+// how do we filter the products and pass the category into the right column.
+// submit materialize form, and tag each item submitted
+// how we do connect the
 
 export default Menu
