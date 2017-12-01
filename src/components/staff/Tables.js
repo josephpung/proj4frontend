@@ -23,7 +23,7 @@ class Tables extends Component {
         {
           [...Array(this.state.tableQuantity)].map((tableNumber, i) =>
             <div key={i}>
-              <Col m={2} s={2} key={i}>
+              <Col m={3} s={2} key={i}>
                 <Card className='blue-grey darken-1' textClassName='white-text' actions={[<a>This is a link</a>]}>
               Table {i + 1}
                 </Card>

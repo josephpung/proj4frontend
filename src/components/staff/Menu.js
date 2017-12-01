@@ -8,43 +8,52 @@ const restaurantMenu = [
     id: 1,
     category: 'mains',
     name: 'Cold Cut Trio',
-    Price: 5
+    price: 5
   },
   {
     id: 2,
     category: 'mains',
     name: 'Subway Melts',
-    Price: 7
+    price: 7
   },
   {
     id: 3,
     category: 'mains',
     name: 'Meatball Marinara',
-    Price: 6.50
+    price: 6.50
   },
   {
     id: 4,
     category: 'appetizer',
     name: 'Double Chocolate Cookie',
-    Price: 1.50
+    price: 1.50
   },
   {
     id: 5,
     category: 'drinks',
     name: 'Dasani Water',
-    Price: 1.50
+    price: 1.50
   },
   {
     id: 6,
     category: 'drinks',
     name: 'Coke',
-    Price: 1.50
+    price: 1.50
+  },
+  {
+    id: 7,
+    category: 'appetizer',
+    name: 'Strawberry Brownie',
+    price: 1.50
   }
 ]
 
 class Menu extends Component {
   constructor (props) {
     super()
+    this.state = {
+
+    }
   }
 
   handleSubmit = (e) => {
@@ -52,6 +61,91 @@ class Menu extends Component {
     console.log('hello i am here');
   }
   render () {
+    const mains = []
+    const appetizer = []
+    const dessert = []
+    const drinks = []
+    const splitByCategory = restaurantMenu.map((eachMenu) => {
+      if(eachMenu.category === 'mains')
+      mains.push(eachMenu)
+      else if(eachMenu.category === 'appetizer')
+      appetizer.push(eachMenu)
+      else if(eachMenu.category === 'dessert')
+      dessert.push(eachMenu)
+      else if(eachMenu.category === 'drinks')
+      drinks.push(eachMenu)
+    })
+
+    let appetizerTab = appetizer.map((item, index) => {
+      return(
+      <tr key={item.id}>
+        <td>{item.name}</td>
+        <td>{item.price}</td>
+        <td>
+          {/* onChange */}
+          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+            <option value='0'>0</option>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+          </Input>
+        </td>
+      </tr>
+      )
+      })
+    let mainsTab = mains.map((item) => {
+      return(
+      <tr key={item.id}>
+        <td>{item.name}</td>
+        <td>{item.price}</td>
+        <td>
+          {/* onChange */}
+          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+            <option value='0'>0</option>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+          </Input>
+        </td>
+      </tr>
+      )
+    })
+    let dessertTab = dessert.map((item) => {
+      return(
+      <tr key={item.id}>
+        <td>{item.name}</td>
+        <td>{item.price}</td>
+        <td>
+          {/* onChange */}
+          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+            <option value='0'>0</option>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+          </Input>
+        </td>
+      </tr>
+      )
+    })
+    let drinksTab = drinks.map((item) => {
+      return(
+      <tr key={item.id}>
+        <td>{item.name}</td>
+        <td>{item.price}</td>
+        <td>
+          {/* onChange */}
+          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+            <option value='0'>0</option>
+            <option value='1'>1</option>
+            <option value='2'>2</option>
+          </Input>
+        </td>
+      </tr>
+      )
+    })
+
+    if(appetizer.length === 0)appetizerTab = <h3>Coming Soon!</h3>
+    if(mains.length === 0)mainsTab = <h3>Coming Soon!</h3>
+    if(dessert.length === 0)dessertTab = <h3>Coming Soon!</h3>
+    if(drinks.length === 0)drinksTab = <h3>Coming Soon!</h3>
+
     return (
       <div>
         <h1>Order Here</h1>
@@ -68,23 +162,52 @@ class Menu extends Component {
                 </thead>
 
                 <tbody>
-                  <tr>
-                    <td>Chicken Rice</td>
-                    <td>$0.87</td>
-                    <td>
-                      <Input s={5} type='select' label='Quantity' defaultValue='0'>
-                        <option value='0'>0</option>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
-                      </Input>
-                    </td>
-                  </tr>
+                    {appetizerTab}
                 </tbody>
               </Table>
             </Tab>
-            <Tab title='Mains'>Test 2</Tab>
-            <Tab title='Drinks'>Test 3</Tab>
-            <Tab title='Desserts'>Test 4</Tab>
+            <Tab title='Mains'>
+              <Table>
+                <thead>
+                  <tr>
+                    <th data-field='id'>Food Item</th>
+                    <th data-field='name'>Price</th>
+                    <th data-field='price'>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {mainsTab}
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab title='Dessert'>
+              <Table>
+                <thead>
+                  <tr>
+                    <th data-field='id'>Food Item</th>
+                    <th data-field='name'>Price</th>
+                    <th data-field='price'>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {dessertTab}
+                </tbody>
+              </Table>
+            </Tab>
+            <Tab title='Drinks'>
+              <Table>
+                <thead>
+                  <tr>
+                    <th data-field='id'>Food Item</th>
+                    <th data-field='name'>Price</th>
+                    <th data-field='price'>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {drinksTab}
+                </tbody>
+              </Table>
+            </Tab>
           </Tabs>
           <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
         </form>
@@ -94,16 +217,27 @@ class Menu extends Component {
   }
 }
 
-/* <ul>{restaurantMenu.map((eachItem) =>
-  if(eachItem.category === 'appetizer')
-  <li>{eachItem.name}
-  </li>
-)}
-</ul> */
-// hard coded form data
+
+// Menu Component
+// Challenge 1
+// How can i filter product by their category and render them according to their category.
+// Tried doing map at the bottom but it won't take if else statements
+// Challenge 2
+// How can i get the data value out. The ID of the food item & quantity
+// Challenge 3
+// On Submit, the
+
+// Table Component
+// Render each table by index
+
+// QrCode Reader
+// Redirect button not working
+
+
+// filter base on category
+// put those filtered into the category they belong to
 //
-// how do we filter the products and pass the category into the right column.
-// submit materialize form, and tag each item submitted
-// how we do connect the
+
+
 
 export default Menu
