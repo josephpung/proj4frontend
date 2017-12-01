@@ -141,10 +141,10 @@ class Menu extends Component {
       )
     })
 
-    if(appetizer.length === 0)appetizerTab = <h3>Coming Soon!</h3>
-    if(mains.length === 0)mainsTab = <h3>Coming Soon!</h3>
-    if(dessert.length === 0)dessertTab = <h3>Coming Soon!</h3>
-    if(drinks.length === 0)drinksTab = <h3>Coming Soon!</h3>
+    if(appetizer.length === 0)appetizerTab = <tr><td><h3>Coming Soon!</h3></td></tr>
+    if(mains.length === 0)mainsTab = <tr><td><h3>Coming Soon!</h3></td></tr>
+    if(dessert.length === 0)dessertTab =<tr><td><h3>Coming Soon!</h3></td></tr>
+    if(drinks.length === 0)drinksTab =<tr><td><h3>Coming Soon!</h3></td></tr>
 
     return (
       <div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Card, Col } from 'react-materialize'
+import { Row, Col, CardPanel } from 'react-materialize'
 
 // hard coded restaurant model data
 var subway = {
@@ -17,20 +17,26 @@ class Tables extends Component {
     }
   }
   render () {
+    const newArr = []
+    for (var i = 1; i <= this.state.tableQuantity; i++) {
+      newArr.push(i)
+    }
+    const table = [...newArr].map((restoTable, index) => {
+      return (
+        <Col key={index} s={2} className='grid-example'>
+          <CardPanel className='teal lighten-4 black-text'>
+            <span>{restoTable}</span>
+          </CardPanel>
+        </Col>
+      )
+    })
+
     return (
       <div>
-        <h1>Select Table Order</h1>
-        {
-          [...Array(this.state.tableQuantity)].map((tableNumber, i) =>
-            <div key={i}>
-              <Col m={3} s={2} key={i}>
-                <Card className='blue-grey darken-1' textClassName='white-text' actions={[<a>This is a link</a>]}>
-              Table {i + 1}
-                </Card>
-              </Col>
-            </div>
-          )
-          }
+        <h1>Select Table</h1>
+        <Row>
+          {table}
+        </Row>
       </div>
     )
   }
