@@ -4,17 +4,18 @@ import { Row, Input, Button} from 'react-materialize'
 class Register extends Component {
   constructor (props) {
     super()
-
     this.state = {
       submitObj: {}
       }
   }
   handleChange(e){
     let tempObj = {...this.state.submitObj}
-    tempObj[e.target.name] = e.target.value
+      tempObj[e.target.name] = e.target.value
+    console.log(e.target.name)
      this.setState({
        submitObj: tempObj
      })
+     console.log(this.state.submitObj);
   }
   render () {
     return (

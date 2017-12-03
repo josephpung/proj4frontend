@@ -1,7 +1,22 @@
 import React, { Component } from 'react'
-import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
+import { Tabs, Tab, Table, Input, Button, Row} from 'react-materialize'
 
 // hard coded food item model data
+
+
+// Form JSON Output I want
+// const formOutput = [
+//   {
+//     itemId: 1,
+//     quantity: 1
+//   },
+//   {
+//     itemId: 3,
+//     quantity: 2
+//   }
+//   ]
+
+
 
 const restaurantMenu = [
   {
@@ -48,14 +63,28 @@ const restaurantMenu = [
   }
 ]
 
+// find object selected
+// push quantity into the object
+// pass that
+
 class Menu extends Component {
   constructor (props) {
     super()
     this.state = {
-
+      submitArray : []
     }
   }
-
+  handleOnChange = (e) => {
+    const tempObj = {}
+    const tempArray = [...this.state.submitArray, tempObj]
+    if(e.target.value > 0 ) {
+      tempObj[e.target.name] = e.target.value
+      this.setState({
+        submitArray: tempArray
+      })
+    }
+    console.log(tempArray)
+  }
   handleSubmit = (e) => {
     e.preventDefault()
     console.log('hello i am here');
@@ -82,8 +111,7 @@ class Menu extends Component {
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          {/* onChange */}
-          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -99,7 +127,7 @@ class Menu extends Component {
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -115,7 +143,7 @@ class Menu extends Component {
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -130,8 +158,7 @@ class Menu extends Component {
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          {/* onChange */}
-          <Input s={5} type='select' label='Quantity' defaultValue='0'>
+          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -217,26 +244,22 @@ class Menu extends Component {
   }
 }
 
-
-// Menu Component
-// Challenge 1
-// How can i filter product by their category and render them according to their category.
-// Tried doing map at the bottom but it won't take if else statements
-// Challenge 2
-// How can i get the data value out. The ID of the food item & quantity
-// Challenge 3
-// On Submit, the
-
-// Table Component
-// Render each table by index
-
-// QrCode Reader
-// Redirect button not working
-
-
-// filter base on category
-// put those filtered into the category they belong to
+// constructor (props) {
+//     super()
+//     this.state = {
+//       submitOb : {}
+//     }
+//   }
+//   handleOnChange = (e) => {
 //
+//     let tempObj = {...this.state.submitObj}
+//     if(e.target.value > 0 ) {
+//       tempObj[e.target.name] = e.target.value
+//       this.setState({
+//         submitObj: tempObj
+//       })
+//     }
+//   }
 
 
 

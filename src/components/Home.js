@@ -26,7 +26,6 @@ class Home extends Component {
   this.state = {
     allRestaurants: []
   }
-
 }
   render () {
 
