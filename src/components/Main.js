@@ -4,11 +4,10 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Qrcode from './Qrcode'
+import Menu from './customer/Menu'
 import Tables from './staff/Tables'
-import Menu from './staff/Menu'
-import Restaurants from './staff/Restaurants'
+import Order from './staff/Order'
 import Kitchen from './staff/Kitchen'
-import Menu from './Menu'
 import Payment from './stripe/Payment'
 
 // The Main component renders one of the three provided
@@ -25,7 +24,7 @@ const Main = (props) => (
       <Route path='/qrcode' component={Qrcode}/>
       <Route path='/tables' component={Tables}/>
       <Route path='/menu' component={Menu}/>
-      <Route path='/restaurants' component={Restaurants}/>
+      <Route path='/order' component={Order}/>
       <Route path='/kitchen' component={Kitchen}/>
       <Route path='/payment' component={Payment}/>
     </Switch>

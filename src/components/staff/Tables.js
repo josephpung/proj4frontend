@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Row, Col, CardPanel } from 'react-materialize'
 
-// Subway Restaurant - Props pass from Restaurants Parent Component
-const subway = {
+
+const pizzaExpress = {
   id: 1,
-  name: 'subway',
-  tableQuantity: 43
+  name: 'PizzaExpress',
+  tableQuantity: 25
 }
 // hard coded order model
 const restaurantOrders = [
@@ -18,11 +19,13 @@ const restaurantOrders = [
   },
   {
     _id: 2,
+    restaurantid: 1,
     dishes: [1],
     table_number: 4
   },
   {
     _id: 3,
+    restaurantid: 1,
     dishes: [3],
     table_number: 6
   }
@@ -32,8 +35,8 @@ class Tables extends Component {
   constructor (props) {
     super()
     this.state = {
-      name: subway.name,
-      tableQuantity: subway.tableQuantity
+      name: pizzaExpress.name,
+      tableQuantity: pizzaExpress.tableQuantity
     }
   }
 
@@ -66,9 +69,11 @@ class Tables extends Component {
     return (
       <div>
         <h1>Select Table</h1>
-        <Row>
-          {table}
-        </Row>
+        <Link to="/order">
+          <Row>
+            {table}
+          </Row>
+        </Link>
       </div>
     )
   }
