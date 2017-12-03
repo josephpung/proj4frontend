@@ -5,6 +5,10 @@ class Login extends Component {
   constructor (props) {
     super()
   }
+
+  handleChange = (e) => {
+
+  }
   render () {
     return (
       <div>
