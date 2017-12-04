@@ -17,6 +17,8 @@ class CheckoutForm extends React.Component {
       console.log('Received Stripe token:', token);
     });
 
+    
+
     // However, this line of code will do the same thing:
     // this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
   }
