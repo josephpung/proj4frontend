@@ -47,6 +47,9 @@ class Login extends Component {
 
   }
 
+  handleChange = (e) => {
+
+  }
   render () {
     if (this.state.redirect) {
        return <Redirect to='/'/>;

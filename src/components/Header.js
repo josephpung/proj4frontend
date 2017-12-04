@@ -12,11 +12,13 @@ class Header extends Component {
     this.props.userLogout()
   }
   render() {
+
     if(this.props.loggedIn){
       return (
         <Navbar brand='OmniApp' right className="blue">
           <li><NavLink to="/">Home</NavLink></li>
           <li><NavLink to="/qrcode">Scan QR Code</NavLink></li>
+          <li><NavLink to="/tables">Generate QR Code</NavLink></li>
           <li><NavLink to="/" onClick={(e)=>{this.handleClick(e)}}>logout</NavLink></li>
           </Navbar>
       )
@@ -27,6 +29,7 @@ class Header extends Component {
           <li><NavLink to="/login">Login</NavLink></li>
           <li><NavLink to="/register">Register</NavLink></li>
           <li><NavLink to="/qrcode">Scan QR Code</NavLink></li>
+          <li><NavLink to="/tables">Generate QR Code</NavLink></li>
           </Navbar>
       )
     }
