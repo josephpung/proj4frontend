@@ -64,6 +64,11 @@ class Menu extends Component {
     }
   }
 
+  handleSubmit = (e) => {
+        e.preventDefault()
+        console.log('hello i am here');
+  }
+
   handleOnChange = (e) => {
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
     if (e.target.value > 0) {
@@ -79,11 +84,6 @@ class Menu extends Component {
     console.log(this.state.restaurantMenu)
   }
 
-  handleSubmit = (e) => {
-        e.preventDefault()
-        console.log('hello i am here');
-  }
-
   // should be placeed into Tab component like onClick
   handleTab = (tabIndex) => {
     const tempObj = {}
@@ -96,13 +96,12 @@ class Menu extends Component {
     })
   }
 
-
   render () {
     const appetizer = []
     const mains = []
     const dessert = []
     const drinks = []
-    
+
     this.state.restaurantMenu.forEach((eachMenu) => {
       if(eachMenu.category === 'mains')
       return mains.push(eachMenu)
