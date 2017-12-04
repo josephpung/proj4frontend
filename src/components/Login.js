@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Row, Input, Col, Preloader, Button } from 'react-materialize'
+import { Link } from 'react-router-dom'
+import { Row, Input, Button } from 'react-materialize'
 
 import { connect } from 'react-redux'
 import { login } from '../actions/userAction'
@@ -64,11 +65,6 @@ class Login extends Component {
       <div>
 
         <h1>Login Page</h1>
-        <Row className='center'>
-          <Col s={12}>
-            <Preloader flashing />
-          </Col>
-        </Row>
         <Row>
           {this.state.errorMsg}
             user: {this.state.userTest}
@@ -79,6 +75,14 @@ class Login extends Component {
           <Button />
             {/* <Button onClick={()=>this.loginUser()} className="black" waves='light'>Login</Button> */}
         </Row>
+
+        <Row>
+          <Link to="/register">
+
+          <Button className="blue" waves="light">Sign Up</Button>
+          </Link>
+        </Row>
+
       </div>
     )
   }

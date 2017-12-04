@@ -18,7 +18,9 @@ class Header extends Component {
         <Navbar brand='OmniApp' right className="blue">
           <li><NavLink to="/">Home</NavLink></li>
           <li><NavLink to="/qrcode">Scan QR Code</NavLink></li>
-          <li><NavLink to="/tables">Generate QR Code</NavLink></li>
+          <li><NavLink to="/payment">Payment</NavLink></li>
+          <li><NavLink to="/tables">View Tables</NavLink></li>
+          <li><NavLink to="/kitchen">View Kitchen</NavLink></li>
           <li><NavLink to="/" onClick={(e)=>{this.handleClick(e)}}>logout</NavLink></li>
           </Navbar>
       )
@@ -29,7 +31,9 @@ class Header extends Component {
           <li><NavLink to="/login">Login</NavLink></li>
           <li><NavLink to="/register">Register</NavLink></li>
           <li><NavLink to="/qrcode">Scan QR Code</NavLink></li>
-          <li><NavLink to="/tables">Generate QR Code</NavLink></li>
+          <li><NavLink to="/payment">Payment</NavLink></li>
+          <li><NavLink to="/tables">View Tables</NavLink></li>
+          <li><NavLink to="/kitchen">View Kitchen</NavLink></li>
           </Navbar>
       )
     }
