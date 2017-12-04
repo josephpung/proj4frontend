@@ -1,21 +1,5 @@
 import React, { Component } from 'react'
-import { Tabs, Tab, Table, Input, Button, Row} from 'react-materialize'
-
-// hard coded food item model data
-
-
-// Form JSON Output I want
-// const formOutput = [
-//   {
-//     itemId: 1,
-//     quantity: 1
-//   },
-//   {
-//     itemId: 3,
-//     quantity: 2
-//   }
-//   ]
-
+import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 
 
 const restaurantMenu = [
@@ -63,46 +47,71 @@ const restaurantMenu = [
   }
 ]
 
-// find object selected
-// push quantity into the object
-// pass that
 
 class Menu extends Component {
   constructor (props) {
     super()
     this.state = {
-      submitArray : []
+      restaurantMenu,
+      currentTab: 0,
+      category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
+      tab: {
+        Appetizers: true,
+        Mains: false,
+        Dessert: false,
+        Drinks: false
+      }
     }
   }
   handleOnChange = (e) => {
-    const tempObj = {}
-    const tempArray = [...this.state.submitArray, tempObj]
-    if(e.target.value > 0 ) {
-      tempObj[e.target.name] = e.target.value
-      this.setState({
-        submitArray: tempArray
+    const copiedRestaurantMenu = [...this.state.restaurantMenu]
+    if (e.target.value > 0) {
+    const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
+
+    // update quantity to the object
+    selectedMenu.quantity = e.target.value
+    // setState for restaurantMenu
+    this.setState({
+      restaurantMenu: copiedRestaurantMenu
       })
     }
-    console.log(tempArray)
+    console.log(this.state.restaurantMenu)
   }
+
   handleSubmit = (e) => {
     e.preventDefault()
     console.log('hello i am here');
   }
+
+  // should be placeed into Tab component like onClick
+  handleTab = (tabIndex) => {
+    const tempObj = {}
+    this.state.category.forEach((category, index) => {
+      tempObj[category] = Number(tabIndex.slice(-1)) === index ? true : false
+    })
+
+    this.setState({
+      tab: tempObj
+    })
+  }
+
+
   render () {
     const mains = []
     const appetizer = []
     const dessert = []
     const drinks = []
-    const splitByCategory = restaurantMenu.map((eachMenu) => {
+    const splitByCategory = this.state.restaurantMenu.map((eachMenu) => {
       if(eachMenu.category === 'mains')
-      mains.push(eachMenu)
+      return mains.push(eachMenu)
       else if(eachMenu.category === 'appetizer')
-      appetizer.push(eachMenu)
+      return appetizer.push(eachMenu)
       else if(eachMenu.category === 'dessert')
-      dessert.push(eachMenu)
+      return dessert.push(eachMenu)
       else if(eachMenu.category === 'drinks')
-      drinks.push(eachMenu)
+      return drinks.push(eachMenu)
+      else
+      return Error('Error')
     })
 
     let appetizerTab = appetizer.map((item, index) => {
@@ -111,7 +120,7 @@ class Menu extends Component {
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
+          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -120,6 +129,7 @@ class Menu extends Component {
       </tr>
       )
       })
+
     let mainsTab = mains.map((item) => {
       return(
       <tr key={item.id}>
@@ -127,7 +137,7 @@ class Menu extends Component {
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
+          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -143,7 +153,7 @@ class Menu extends Component {
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
+          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -158,7 +168,7 @@ class Menu extends Component {
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          <Input s={5} name='quantity' type='select' label='Quantity' defaultValue='0' onChange={(e) => this.handleOnChange(e)}>
+          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -177,8 +187,8 @@ class Menu extends Component {
       <div>
         <h1>Order Here</h1>
         <form>
-          <Tabs className='tab-demo z-depth-1'>
-            <Tab title='Appetizers' active>
+          <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab } >
+            <Tab title='Appetizers' active={this.state.tab.Appetizers}>
               <Table>
                 <thead>
                   <tr>
@@ -193,7 +203,7 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
-            <Tab title='Mains'>
+            <Tab title='Mains' active={this.state.tab.Mains}>
               <Table>
                 <thead>
                   <tr>
@@ -207,7 +217,7 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
-            <Tab title='Dessert'>
+            <Tab title='Dessert' active={this.state.tab.Dessert}>
               <Table>
                 <thead>
                   <tr>
@@ -221,7 +231,7 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
-            <Tab title='Drinks'>
+            <Tab title='Drinks' active={this.state.tab.Drinks}>
               <Table>
                 <thead>
                   <tr>
@@ -243,23 +253,6 @@ class Menu extends Component {
     )
   }
 }
-
-// constructor (props) {
-//     super()
-//     this.state = {
-//       submitOb : {}
-//     }
-//   }
-//   handleOnChange = (e) => {
-//
-//     let tempObj = {...this.state.submitObj}
-//     if(e.target.value > 0 ) {
-//       tempObj[e.target.name] = e.target.value
-//       this.setState({
-//         submitObj: tempObj
-//       })
-//     }
-//   }
 
 
 
