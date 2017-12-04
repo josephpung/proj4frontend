@@ -3,25 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "qrcode.react": "^0.7.2",
     "apollo-client-preset": "^1.0.3",
+    "axios": "^0.17.1",
     "firebase": "^4.6.2",
     "graphql": "^0.11.7",
     "graphql-tag": "^2.5.0",
+    "qrcode.react": "^0.7.2",
     "react": "15.x",
     "react-apollo": "^2.0.1",
     "react-dom": "15.x",
     "react-materialize": "^1.1.0",
     "react-qr-reader": "^2.0.1",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.17",
+    "react-script": "^2.0.5",
     "react-stripe-elements": "^1.2.1",
     "uuid": "^3.1.0"
+  },
+  "devDependencies": {
+    "react-scripts": "^1.0.17"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:8000"
 }

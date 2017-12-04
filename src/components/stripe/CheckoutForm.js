@@ -1,9 +1,8 @@
 import React from 'react';
 import {injectStripe} from 'react-stripe-elements';
+import axios from 'axios'
 
-// import AddressSection from './AddressSection';
-import CardSection from './CardSection';
-
+// import CardSection from './CardSection';
 
 class CheckoutForm extends React.Component {
   handleSubmit = (ev) => {
@@ -17,7 +16,10 @@ class CheckoutForm extends React.Component {
       console.log('Received Stripe token:', token);
     });
 
-    
+    axios.post("charge", {
+    })
+    .then(res => console.log(res.data))
+
 
     // However, this line of code will do the same thing:
     // this.props.stripe.createToken({type: 'card', name: 'Jenny Rosen'});
@@ -26,10 +28,7 @@ class CheckoutForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <CardSection />
-        <br />
         <button>Pay Order</button>
-
       </form>
     );
   }
