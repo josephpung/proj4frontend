@@ -1,36 +1,20 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
 
 
-const QUERY = gql`
-  # 2
-  query Query {
-    allRestaurants {
-      name
-      cuisine
-      address
-    }
-
-  }
-`
 
 
 class Home extends Component {
   constructor(props) {
   super()
 
-  console.log('props at constructor', props.data)
 
   this.state = {
     allRestaurants: []
   }
 }
   render () {
-
-        if (!this.props.data.loading) {
-        const allRestaurants = this.props.data.allRestaurants.map(post => {
+        const allRestaurants = this.state.allRestaurants.map(post => {
           return (
 
             <div className="col s12 m4">
@@ -63,18 +47,8 @@ class Home extends Component {
 
           </div>
         )
-      } else {
-        return (
-
-            <div className="container">
-              <div className="row">
-                <h2>Fetching now...</h2>
-              </div>
-            </div>
-          )
-        }
       }
     }
 
 
-export default graphql(QUERY)(Home)
+export default Home
