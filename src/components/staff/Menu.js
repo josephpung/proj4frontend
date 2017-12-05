@@ -64,15 +64,22 @@ class Menu extends Component {
     }
   }
   handleOnChange = (e) => {
+    console.log(typeof e.target.value)
+    console.log(this.state.restaurantMenu)
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
-    if (e.target.value > 0) {
+    if (Number(e.target.value) > 0) {
     const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
-
     // update quantity to the object
     selectedMenu.quantity = e.target.value
     // setState for restaurantMenu
     this.setState({
       restaurantMenu: copiedRestaurantMenu
+      })
+    } else if(Number(e.target.value) === 0) {
+      const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
+      selectedMenu.quantity = e.target.value
+      this.setState({
+        restaurantMenu: copiedRestaurantMenu
       })
     }
   }

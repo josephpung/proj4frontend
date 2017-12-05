@@ -12,7 +12,8 @@ const tableOutput = [
             {id: 5, category: 'drinks', name: 'Dasani Water', price: 1.5, quantity: '2'},
             {id: 7, category: 'appetizer', name: 'Strawberry Brownie', price: 1.5, quantity: '1'}
     ],
-    tableNumber: 1
+    tableNumber: 1,
+    status: 'preparing/completed'
   },
   {
     id: 124,
@@ -37,14 +38,45 @@ export default class Kitchen extends Component {
     }
   }
 
+
   handleChangeBG (e, dish) {
+    console.log(this.state.foodReady)
     const tableNum = e.target.id
     const foodThatIsReady = {}
     foodThatIsReady[`Table ${tableNum}`] = `${dish.quantity} x ${dish.name}`
-    e.target.className = this.state.bgColor
-    this.state.changeColor = !this.state.changeColor
-    if(this.state.changeColor) this.setState({ bgColor: 'orange lighten-5' })
-    else this.setState({ bgColor: 'green accent-1' })
+    let updatingReadyArr = []
+    if (!e.target.className.includes('ready')) {
+      e.target.className = this.state.bgColor + ' ' + 'ready'
+      updatingReadyArr = [...this.state.foodReady, foodThatIsReady ]
+    } else {
+       updatingReadyArr = [...this.state.foodReady].filter(item => {
+         return  JSON.stringify(item) !==  JSON.stringify(foodThatIsReady)
+       })
+       e.target.className = ''
+    }
+    this.setState({
+      foodReady: updatingReadyArr
+    })
+
+   //  e.target.className = this.state.bgColor
+   //  this.state.changeColor = !this.state.changeColor
+   //
+   //  if(this.state.changeColor) {
+   //    var filteredArray = [...this.state.foodReady].filter(item => {
+   //      return item.toString() !== foodThatIsReady.toString()
+   //    })
+   //  this.setState({
+   //    bgColor: 'orange lighten-5',
+   //    foodReady: filteredArray
+   // })
+   //  }
+   //  else {
+   //    var copiedArray = [...this.state.foodReady, foodThatIsReady ]
+   //    this.setState({
+   //      bgColor: 'green accent-1',
+   //      foodReady: copiedArray
+   //    })
+   //  }
   }
 
   handleFoodIsReady = (e) => {
@@ -82,7 +114,7 @@ export default class Kitchen extends Component {
     var test = this.state.tableOutput.map((foodOrder, index) => {
       return (
         <Col key={foodOrder.id} s={3} >
-          <Card className=' orange lighten-5 small' textClassName='black-text' title={`Table ${foodOrder.tableNumber.toString()}`}
+          <Card className='orange lighten-5 small' textClassName='black-text' title={`Table ${foodOrder.tableNumber.toString()}`}
             actions= {[<Button id={foodOrder.tableNumber} onClick={this.handleFoodIsReady} waves='light'>Food Ready</Button>]}>
             {test11[index]}
             <div>
