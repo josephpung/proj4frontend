@@ -96,7 +96,7 @@ class Menu extends Component {
       submitObj: tempObj
       })
       console.log(this.state.submitObj);
-    }
+    } 
     console.log(this.state.restaurantMenu)
   }
 
@@ -117,6 +117,7 @@ class Menu extends Component {
     const mains = []
     const dessert = []
     const drinks = []
+
 
     this.state.restaurantMenu.forEach((eachMenu) => {
       if(eachMenu.category === 'mains')
