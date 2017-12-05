@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 
+import io from 'socket.io-client';
 
+const socket = io('/');
 const restaurantMenu = [
   {
     id: 1,
@@ -52,6 +54,7 @@ class Menu extends Component {
   constructor (props) {
     super()
     this.state = {
+      testText: "NO DATA RECEIVED",
       restaurantMenu,
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
@@ -79,6 +82,7 @@ class Menu extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault()
+    socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
     console.log('hello i am here');
   }
 
@@ -94,6 +98,15 @@ class Menu extends Component {
     })
   }
 
+  componentDidMount(){
+
+    socket.on("orderConfirmed", (data)=>{
+      console.log(data)
+      this.setState({
+        testText: 'DATA RECIEVED'
+      })
+    })
+  }
 
   render () {
     const mains = []
@@ -184,6 +197,7 @@ class Menu extends Component {
 
     return (
       <div>
+        {this.state.testText}
         <h1>Order Here</h1>
         <form>
           <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab } >

@@ -25,9 +25,10 @@ const Main = () => (
       <Route path='/qrcode' component={Qrcode}/>
       <Route path='/tables' component={Tables}/>
       <Route path='/menu' component={Menu}/>
-      <Route path='/order' component={Order}/>
+      <Route path='/table/:restoTableId' component={Order}/>
       <Route path='/kitchen' component={Kitchen}/>
       <Route path='/payment' component={Payment}/>
+
     </Switch>
   </main>
 )

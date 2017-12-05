@@ -21,6 +21,7 @@ class Header extends Component {
           <li><NavLink to="/payment">Payment</NavLink></li>
           <li><NavLink to="/tables">View Tables</NavLink></li>
           <li><NavLink to="/kitchen">View Kitchen</NavLink></li>
+          <li><NavLink to="/menu">View Menu</NavLink></li>
           <li><NavLink to="/" onClick={(e)=>{this.handleClick(e)}}>logout</NavLink></li>
           </Navbar>
       )
@@ -34,6 +35,8 @@ class Header extends Component {
           <li><NavLink to="/payment">Payment</NavLink></li>
           <li><NavLink to="/tables">View Tables</NavLink></li>
           <li><NavLink to="/kitchen">View Kitchen</NavLink></li>
+          <li><NavLink to="/menu">View Menu</NavLink></li>
+
           </Navbar>
       )
     }

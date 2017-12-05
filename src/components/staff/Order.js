@@ -23,9 +23,34 @@ import React, { Component } from 'react'
 // ]
 
 class Order extends Component {
+  constructor(){
+    super()
+
+    this.state = {
+      name: "bob"
+    }
+  }
+  componentDidMount() {
+    const { match: { params } } = this.props
+
+    console.log(params)
+    // axios.get(`/api/table/${params.restoTableId}`)
+    //   .then(({ data: user }) => {
+    //     console.log('user', user);
+    //
+    //     this.setState({ user });
+    //   })
+  }
   render () {
     return (
-      <h1>View Order</h1>
+      <div>
+        <h1>View Order</h1>
+        <p>
+          asdadkdvknv
+        </p>
+
+      </div>
+
     )
   }
 }

@@ -76,13 +76,6 @@ class Login extends Component {
             {/* <Button onClick={()=>this.loginUser()} className="black" waves='light'>Login</Button> */}
         </Row>
 
-        <Row>
-          <Link to="/register">
-
-          <Button className="blue" waves="light">Sign Up</Button>
-          </Link>
-        </Row>
-
       </div>
     )
   }
