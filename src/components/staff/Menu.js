@@ -75,12 +75,13 @@ class Menu extends Component {
       restaurantMenu: copiedRestaurantMenu
       })
     }
-    console.log(this.state.restaurantMenu)
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    console.log('hello i am here');
+    const filterOrders = this.state.restaurantMenu.filter(eachFood => {
+      return eachFood.quantity > 0
+    })
   }
 
   // should be placeed into Tab component like onClick
