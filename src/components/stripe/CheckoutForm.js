@@ -11,10 +11,10 @@ class CheckoutForm extends React.Component {
 
     // Within the context of `Elements`, this call to createToken knows which Element to
     // tokenize, since there's only one in this group.
-    this.props.stripe.createToken({
-      name: 'Yuki Tsuboniwa'}).then(({token}) => {
-      console.log('Received Stripe token:', token);
-    });
+    // this.props.stripe.createToken({
+    //   name: 'Yuki Tsuboniwa'}).then(({token}) => {
+    //   console.log('Received Stripe token:', token);
+    // });
 
     axios.post("charge", {
     })

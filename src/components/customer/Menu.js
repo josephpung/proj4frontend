@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
+import axios from 'axios'
 
 
 const restaurantMenu = [
@@ -60,26 +62,40 @@ class Menu extends Component {
         Mains: false,
         Dessert: false,
         Drinks: false
-      }
+      },
+      submitObj: {}
     }
   }
 
   handleSubmit = (e) => {
         e.preventDefault()
-        console.log('hello i am here');
+
+        axios.post("addtableorder", {
+          restaurantMenu: this.state.submitObj
+        })
+        .then(res => console.log(res.data))
+
+        // axios.post("additem", {
+        // })
+        // .then(res => console.log(res.data))
   }
 
   handleOnChange = (e) => {
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
     if (e.target.value > 0) {
     const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
-
     // update quantity to the object
     selectedMenu.quantity = e.target.value
+
+    let tempObj = {...this.state.submitObj}
+      tempObj[e.target.name] = e.target.value
+
     // setState for restaurantMenu
     this.setState({
-      restaurantMenu: copiedRestaurantMenu
+      restaurantMenu: copiedRestaurantMenu,
+      submitObj: tempObj
       })
+      console.log(this.state.submitObj);
     }
     console.log(this.state.restaurantMenu)
   }
@@ -121,7 +137,7 @@ class Menu extends Component {
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -138,7 +154,7 @@ class Menu extends Component {
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -155,7 +171,7 @@ class Menu extends Component {
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -171,7 +187,7 @@ class Menu extends Component {
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          <Input s={5} id={item.id.toString()} name='quantity' type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -188,7 +204,8 @@ class Menu extends Component {
 
     return (
       <div>
-        <h1>Order Here</h1>
+          <h1>Order Here</h1>
+
         <form>
           <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab } >
             <Tab title='Appetizers' active={this.state.tab.Appetizers}>
@@ -253,7 +270,19 @@ class Menu extends Component {
             </Tab>
           </Tabs>
 
-              <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
+            <div className="row">
+
+              <div className="col s5">
+                <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
+              </div>
+
+              <div className="col s5">
+              <Link to="/order">
+                <Button>View Order</Button>
+              </Link>
+              </div>
+
+            </div>
 
         </form>
 
