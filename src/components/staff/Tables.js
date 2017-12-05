@@ -69,7 +69,7 @@ class Tables extends Component {
     return (
       <div>
         <h1>Select Table</h1>
-        <Link to="/orders">
+        <Link to="/table/3">
           <Row>
             {table}
           </Row>

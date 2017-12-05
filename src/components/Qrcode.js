@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import QrReader from 'react-qr-reader'
-// import { Route, Redirect } from 'react-router-dom'
+import { withRouter} from 'react-router-dom'
 
 class Qrcode extends Component {
   constructor (props) {
@@ -31,6 +31,17 @@ class Qrcode extends Component {
     }
 
   render () {
+    const TextArea = withRouter(({ history }) => {
+      if(this.state.result !== 'No result') {
+        history.push(this.state.result)
+      }
+      return(
+        <p>
+            {this.state.result}
+        </p>
+        )
+    }
+)
       return (
       <div>
         <h1>QR Code Scanner Goes here</h1>
@@ -41,7 +52,7 @@ class Qrcode extends Component {
             onScan={this.handleScan}
             style={{ width: '100%' }}
           />
-          <p>{this.state.result}</p>
+          <TextArea />
         </div>
       </div>
     )

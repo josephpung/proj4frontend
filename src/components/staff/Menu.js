@@ -3,49 +3,51 @@ import { Link } from 'react-router-dom'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import axios from 'axios'
 
+import io from 'socket.io-client';
 
+const socket = io('/');
 const restaurantMenu = [
   {
     id: 1,
     category: 'mains',
-    name: 'LOBSTER AND CRABMEAT RAVIOLI',
-    price: 18
+    name: 'Cold Cut Trio',
+    price: 5
   },
   {
     id: 2,
     category: 'mains',
-    name: 'QUATTRO FORMAGGIO',
-    price: 15
+    name: 'Subway Melts',
+    price: 7
   },
   {
     id: 3,
-    category: 'appetizer',
-    name: "DOUGH BALLS 'PIZZAEXPRESS'",
-    price: 8
+    category: 'mains',
+    name: 'Meatball Marinara',
+    price: 6.50
   },
   {
     id: 4,
-    category: 'mains',
-    name: 'SPAGHETTI BOLOGNESE',
-    price: 14
+    category: 'appetizer',
+    name: 'Double Chocolate Cookie',
+    price: 1.50
   },
   {
     id: 5,
-    category: 'mains',
-    name: 'CALABRESE',
-    price: 22
+    category: 'drinks',
+    name: 'Dasani Water',
+    price: 1.50
   },
   {
     id: 6,
-    category: 'dessert',
-    name: 'BIG BAD BROWNIE',
-    price: 7
+    category: 'drinks',
+    name: 'Coke',
+    price: 1.50
   },
   {
     id: 7,
     category: 'appetizer',
-    name: 'ANTIPASTO ITALIANO',
-    price: 17
+    name: 'Strawberry Brownie',
+    price: 1.50
   }
 ]
 
@@ -54,6 +56,7 @@ class Menu extends Component {
   constructor (props) {
     super()
     this.state = {
+      testText: "NO DATA RECEIVED",
       restaurantMenu,
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
@@ -65,19 +68,6 @@ class Menu extends Component {
       },
       submitObj: {}
     }
-  }
-
-  handleSubmit = (e) => {
-        e.preventDefault()
-
-        axios.post("addtableorder", {
-          restaurantMenu: this.state.submitObj
-        })
-        .then(res => console.log(res.data))
-
-        // axios.post("additem", {
-        // })
-        // .then(res => console.log(res.data))
   }
 
   handleOnChange = (e) => {
@@ -96,8 +86,14 @@ class Menu extends Component {
       submitObj: tempObj
       })
       console.log(this.state.submitObj);
-    } 
+    }
     console.log(this.state.restaurantMenu)
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
+    console.log('hello i am here');
   }
 
   // should be placeed into Tab component like onClick
@@ -112,13 +108,21 @@ class Menu extends Component {
     })
   }
 
+  componentDidMount(){
+
+    socket.on("orderConfirmed", (data)=>{
+      console.log(data)
+      this.setState({
+        testText: 'DATA RECIEVED'
+      })
+    })
+  }
+
   render () {
-    const appetizer = []
     const mains = []
+    const appetizer = []
     const dessert = []
     const drinks = []
-
-
     this.state.restaurantMenu.forEach((eachMenu) => {
       if(eachMenu.category === 'mains')
       return mains.push(eachMenu)
@@ -164,7 +168,6 @@ class Menu extends Component {
       </tr>
       )
     })
-
     let dessertTab = dessert.map((item) => {
       return(
       <tr key={item.id}>
@@ -181,7 +184,6 @@ class Menu extends Component {
       </tr>
       )
     })
-
     let drinksTab = drinks.map((item) => {
       return(
       <tr key={item.id}>
@@ -205,8 +207,8 @@ class Menu extends Component {
 
     return (
       <div>
-          <h1>Order Here</h1>
-
+        {this.state.testText}
+        <h1>Order Here</h1>
         <form>
           <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab } >
             <Tab title='Appetizers' active={this.state.tab.Appetizers}>
@@ -222,10 +224,8 @@ class Menu extends Component {
                 <tbody>
                     {appetizerTab}
                 </tbody>
-
               </Table>
             </Tab>
-
             <Tab title='Mains' active={this.state.tab.Mains}>
               <Table>
                 <thead>
@@ -240,7 +240,6 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
-
             <Tab title='Dessert' active={this.state.tab.Dessert}>
               <Table>
                 <thead>
@@ -270,21 +269,7 @@ class Menu extends Component {
               </Table>
             </Tab>
           </Tabs>
-
-            <div className="row">
-
-              <div className="col s5">
-                <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
-              </div>
-
-              <div className="col s5">
-              <Link to="/order">
-                <Button>View Order</Button>
-              </Link>
-              </div>
-
-            </div>
-
+          <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
         </form>
 
       </div>

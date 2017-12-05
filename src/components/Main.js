@@ -4,8 +4,11 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Qrcode from './Qrcode'
+
 import Menu from './customer/Menu'
 import Order from './customer/Order'
+import Menu from './staff/Menu'
+
 import Tables from './staff/Tables'
 import Orders from './staff/Orders'
 import Kitchen from './staff/Kitchen'
@@ -16,7 +19,8 @@ import Payment from './stripe/Payment'
 // and /schedule routes will match any pathname that starts
 // with /roster or /schedule. The / route will only match
 // when the pathname is exactly the string "/"
-const Main = (props) => (
+const Main = () => (
+
   <main>
     <Switch>
       <Route exact path='/' component={Home}/>
@@ -25,10 +29,15 @@ const Main = (props) => (
       <Route path='/qrcode' component={Qrcode}/>
       <Route path='/tables' component={Tables}/>
       <Route path='/menu' component={Menu}/>
+
       <Route path='/order' component={Order}/>
       <Route path='/orders' component={Orders}/>
+      <Route path='/table/:restoTableId' component={Order}/>
+
+
       <Route path='/kitchen' component={Kitchen}/>
       <Route path='/payment' component={Payment}/>
+
     </Switch>
   </main>
 )
