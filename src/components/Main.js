@@ -6,7 +6,7 @@ import Login from './Login'
 import Qrcode from './Qrcode'
 
 import Menu from './staff/Menu'
-import Menu from './customer/Menu'
+// import Menu from './customer/Menu'
 import Order from './customer/Order'
 import Tables from './staff/Tables'
 import Orders from './staff/Orders'
