@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Col, Card, Row, Button } from 'react-materialize'
 
-// hard coded Kitchen order prop data
 
+// hard coded Bar order prop data
 // when we search for tableOutput from database, it must automatically filter only food that has status
 // preparing
 let tableOutput = [
@@ -15,24 +15,25 @@ let tableOutput = [
             {id: 7, category: 'appetizer', name: 'Strawberry Brownie', price: 1.5, quantity: '1'}
     ],
     tableNumber: 1,
-    status: 'preparing'
+    foodStatus: 'completed',
+    drinkStatus: 'preparing'
+
   },
   {
     id: 124,
     dishes: [
             {id: 1, category: 'mains', name: 'Chicken Rice', price: 5, quantity: '2'},
             {id: 4, category: 'appetizer', name: 'Beef Noodles', price: 1.5, quantity: '4'},
-            {id: 5, category: 'drinks', name: 'Pineapple Fried Rice', price: 1.5, quantity: '1'},
+            {id: 5, category: 'drinks', name: 'Gin & Tonic', price: 1.5, quantity: '1'},
             {id: 7, category: 'appetizer', name: 'Touch Food', price: 1.5, quantity: '3'}
     ],
     tableNumber: 2,
-    status: 'preparing'
+    foodStatus: 'preparing',
+    drinkStatus: 'preparing'
   }
 ]
 
-// when search the item from backend, filter only order with status preparing
-
-export default class Kitchen extends Component {
+export default class Bar extends Component {
   constructor (props) {
     super()
     this.state = {
@@ -50,7 +51,7 @@ export default class Kitchen extends Component {
     foodThatIsReady[`Table ${tableNum}`] = `${dish.quantity} x ${dish.name}`
     let updatingReadyArr = []
     if (!e.target.className.includes('ready')) {
-      e.target.className = this.state.bgColor + ' ' + 'ready'
+      e.target.className = this.state.bgColor + ' ' + `ready`
       updatingReadyArr = [...this.state.foodReady, foodThatIsReady ]
     } else {
        updatingReadyArr = [...this.state.foodReady].filter(item => {
@@ -89,7 +90,7 @@ export default class Kitchen extends Component {
     console.log(objectKeyArray)
 
     // filter category w/o drinks and get length of dishes ordered
-    let numberOfDishesOrdered = foodOrder.dishes.filter(order => order.category !== "drinks" ).length
+    let numberOfDishesOrdered = foodOrder.dishes.filter(order => order.category === "drinks" ).length
     // compile in an array the key that match the table that you want to remove (key = 1, table = 1)
     const isTableFoodAllServed = objectKeyArray.filter(eachKey => [eachKey].includes(`Table ${tableToRemove}`))
     // if the length of the array matches the number of dishes array, can remove dishes ordered.
@@ -109,7 +110,7 @@ export default class Kitchen extends Component {
     var test11 = test2.map((x, index) => {
       var tableNum = this.state.tableOutput[index].tableNumber
       return x.map(dish => {
-        if(dish.category !== "drinks") {
+        if(dish.category === "drinks") {
           return (
             <div className='' id={tableNum} key={dish.id} onClick={(e) => this.handleChangeBG(e, dish)}>
               {dish.quantity} {dish.name}
@@ -135,7 +136,7 @@ export default class Kitchen extends Component {
 
     return (
       <div>
-        <h2>Kitchen Orders</h2>
+        <h2>Bar Orders</h2>
         <Row>
           {test}
         </Row>
@@ -143,23 +144,3 @@ export default class Kitchen extends Component {
     )
   }
 }
-
-// drinks should be send to the bar counter
-// send alert to staff when kitchen push order
-// notification sent to staff shouldn't be sent again // completed
-// only if the length of Order Dishes match the dishes delivered, then order can be removed // completed
-// status preparing/cooked // completed
-
-
-// from delete Order
-// find id of Restotable from backend, update status to completed
-
-// bar
-
-// 2 Problems I need to solve
-// How do i split the drinks and the kitchen food => by category? or food item?
-// How do I check if an order is completed at the bar if kitchen share the same status.
-// => if kitchen completes an order
-
-// => Backend: dishes default value is preparing
-// => How can frontend talk to the backend to update the status of the dishes.

@@ -8,6 +8,8 @@ import Tables from './staff/Tables'
 import Menu from './staff/Menu'
 import Restaurants from './staff/Restaurants'
 import Kitchen from './staff/Kitchen'
+import Bar from './staff/Bar'
+
 
 
 // The Main component renders one of the three provided
@@ -26,6 +28,8 @@ const Main = (props) => (
       <Route path='/menu' component={Menu}/>
       <Route path='/restaurants' component={Restaurants}/>
       <Route path='/kitchen' component={Kitchen}/>
+      <Route path='/bar' component={Bar}/>
+
     </Switch>
   </main>
 )
