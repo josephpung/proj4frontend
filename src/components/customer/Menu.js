@@ -70,14 +70,15 @@ class Menu extends Component {
   handleSubmit = (e) => {
         e.preventDefault()
 
-        axios.post("addtableorder", {
+        // axios.post("addtableorder", {
+        //   restaurantMenu: this.state.submitObj
+        // })
+        // .then(res => console.log(res.data))
+
+        axios.put("saveorder", {
           restaurantMenu: this.state.submitObj
         })
         .then(res => console.log(res.data))
-
-        // axios.post("additem", {
-        // })
-        // .then(res => console.log(res.data))
   }
 
   handleOnChange = (e) => {
@@ -96,7 +97,7 @@ class Menu extends Component {
       submitObj: tempObj
       })
       console.log(this.state.submitObj);
-    } 
+    }
     console.log(this.state.restaurantMenu)
   }
 
