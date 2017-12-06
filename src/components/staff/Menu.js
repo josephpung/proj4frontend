@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import axios from 'axios'
+import { Link} from 'react-router-dom'
+
 
 import io from 'socket.io-client';
 
@@ -121,6 +122,7 @@ class Menu extends Component {
   }
 
   render () {
+
     const mains = []
     const appetizer = []
     const dessert = []
@@ -273,7 +275,9 @@ class Menu extends Component {
               </Table>
             </Tab>
           </Tabs>
-          <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
+          <Button onClick={e => this.handleSubmit(e)} waves='light'>Add To Cart</Button>
+          <Link to={"/customer_table_order"} className="btn right">View Bill</Link>
+
         </form>
 
       </div>

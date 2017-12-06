@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
+import { connect } from 'react-redux'
+import { reloadUser } from '../../actions/userAction'
 import axios from 'axios'
+import io from 'socket.io-client';
+import { Link } from 'react-router-dom'
+
+const socket = io('/');
 
 const restaurantMenu = [
   {
@@ -52,7 +58,10 @@ class Orders extends Component {
   constructor (props) {
     super()
     this.state = {
-      restaurantMenu,
+      tableNumber: "",
+      restaurantMenu: [],
+      tableOrders: {},
+      restoId: "",
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
       tab: {
@@ -65,36 +74,51 @@ class Orders extends Component {
     }
   }
 
+  reload = (e) =>{
+    this.props.refreshUser()
+  }
+
   handleSubmit = (e) => {
         e.preventDefault()
-
-        axios.post("addtableorder", {
+        const { match: { params } } = this.props
+        axios.post("/addtableorder", {
+          id: this.state.tableNumber,
           restaurantMenu: this.state.submitObj
         })
         .then(res => console.log(res.data))
-
-        // axios.post("additem", {
-        // })
-        // .then(res => console.log(res.data))
   }
 
   handleOnChange = (e) => {
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
     if (e.target.value > 0) {
-    const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
+    const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
     // update quantity to the object
     selectedMenu.quantity = e.target.value
 
     let tempObj = {...this.state.submitObj}
       tempObj[e.target.name] = e.target.value
-
     // setState for restaurantMenu
     this.setState({
       restaurantMenu: copiedRestaurantMenu,
       submitObj: tempObj
       })
-      console.log(this.state.submitObj);
-    }
+
+    }else if(Number(e.target.value) === 0) {
+      const copiedRestaurantMenu = [...this.state.restaurantMenu]
+      const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
+        delete selectedMenu.quantity
+
+      let tempObj = {...this.state.submitObj}
+
+        // tempObj[e.target.name] = e.target.value
+        delete tempObj[e.target.name]
+
+      this.setState({
+        restaurantMenu: copiedRestaurantMenu,
+        submitObj: tempObj
+      })
+
+  }
     console.log(this.state.restaurantMenu)
   }
 
@@ -110,6 +134,62 @@ class Orders extends Component {
     })
   }
 
+  componentWillMount(){
+    function isEmpty( obj ) {
+      for ( var prop in obj ) {
+        return false;
+      }
+      return true;
+    }
+    console.log("mounted");
+    const { match: { params } } = this.props
+
+    this.setState({
+      localSavedOrder: this.props.user.savedOrder,
+      tableNumber: params.restoTableId
+    })
+
+    axios.get(`/table/${params.restoTableId}`)
+    .then(result=>{
+
+      this.setState({
+        tableOrders: result.data.dishes
+      })
+      axios.get(`/menu/${result.data.restaurant_id}`)
+      .then(response =>{
+        if(!isEmpty(this.state.tableOrders)){
+          let menuList = response.data.map(menuItem =>{
+            for (var key in this.state.tableOrders){
+              if(key === menuItem.name){
+                menuItem["quantity"] = this.state.tableOrders[menuItem.name]
+                return menuItem
+              }else{
+                return menuItem
+              }
+            }
+          })
+            console.log(menuList);
+          this.setState({
+            restaurantMenu: menuList
+          })
+        }else{
+          this.setState({
+            restaurantMenu: response.data
+          })
+        }
+
+      })
+    })
+
+  }
+  componentDidMount(){
+
+    socket.on("orderConfirmed", (data)=>{
+      this.setState({
+        testText: data.message
+      })
+    })
+  }
   render () {
     const appetizer = []
     const mains = []
@@ -131,11 +211,11 @@ class Orders extends Component {
 
     let appetizerTab = appetizer.map((item, index) => {
       return(
-      <tr key={item.id}>
+      <tr key={item._id}>
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -147,12 +227,12 @@ class Orders extends Component {
 
     let mainsTab = mains.map((item) => {
       return(
-      <tr key={item.id}>
+      <tr key={item._id}>
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -164,12 +244,12 @@ class Orders extends Component {
 
     let dessertTab = dessert.map((item) => {
       return(
-      <tr key={item.id}>
+      <tr key={item._id}>
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -181,11 +261,11 @@ class Orders extends Component {
 
     let drinksTab = drinks.map((item) => {
       return(
-      <tr key={item.id}>
+      <tr key={item._id}>
         <td>{item.name}</td>
         <td>{item.price}</td>
         <td>
-          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -200,6 +280,70 @@ class Orders extends Component {
     if(dessert.length === 0)dessertTab =<tr><td><h3>Coming Soon!</h3></td></tr>
     if(drinks.length === 0)drinksTab =<tr><td><h3>Coming Soon!</h3></td></tr>
 
+
+    // let displayOrderList = this.state.tableOrders.map(order=>{
+    //   return (
+    //     <div key={order.id}>{order.id}</div>
+    //   )
+    // })
+    if (this.props.user.type ==="user"){
+      return (
+        <div>
+        <h1 className="center">View Ordersz</h1>
+        <h5>Table Number: </h5>
+
+        <Table>
+        	<thead>
+        		<tr>
+        			<th data-field="id">Dish Name</th>
+        			<th data-field="name">Quantity</th>
+        			<th data-field="price">Total Price</th>
+        		</tr>
+        	</thead>
+
+        	<tbody>
+        		<tr>
+        			<td>Alvin</td>
+        			<td>Eclair</td>
+        			<td>$0.87</td>
+        		</tr>
+        		<tr>
+        			<td>Alan</td>
+        			<td>Jellybean</td>
+        			<td>$3.76</td>
+        		</tr>
+        	</tbody>
+        </Table>
+        <Table>
+        	<thead>
+            <tr>
+              <th></th>
+            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+              <td></td>
+              <td className="right-align"><label>Subtotal:</label></td>
+        			<td>$22.90</td>
+        		</tr>
+            <tr>
+              <td></td>
+              <td className="right-align"><label>GST & Service Charge</label></td>
+        			<td>$2.90</td>
+        		</tr>
+            <tr>
+              <td></td>
+              <td className="right-align"><label>Total</label></td>
+        			<td>$25.90</td>
+        		</tr>
+        	</tbody>
+        </Table>
+        <Link to={"/menu"} className="btn black">back to Menu</Link>
+        <Link to={"/menu"} className="btn right black">Pay Bill beetch</Link>
+
+        </div>
+      )
+    }else{
     return (
     <div className="row">
       <div className="col s5">
@@ -207,9 +351,8 @@ class Orders extends Component {
 
       <ul className="collection">
         <li className="collection-item avatar">
-          <span className="title">Name</span>
-          <p>Price</p>
-          <p>Quanity</p>
+          {/* {displayOrderList} */}
+          {/* {this.state.localSavedOrder} */}
         </li>
       </ul>
 
@@ -293,11 +436,26 @@ class Orders extends Component {
             </div>
 
           </form>
+          <Button onClick={e => this.reload(e)} waves='light'>Refresh User</Button>
 
       </div>
     </div>
     )
+    }
   }
 }
 
-export default Orders
+const mapStateToProps = (state) =>{
+  console.log(state.users);
+  return {
+    user: state.users
+  }
+}
+
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    refreshUser: () => dispatch(reloadUser())
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Orders)
