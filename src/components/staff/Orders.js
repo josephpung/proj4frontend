@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import axios from 'axios'
 
-import io from 'socket.io-client';
-
-const socket = io('/');
 const restaurantMenu = [
   {
     id: 1,
     category: 'mains',
-    name: 'Cold Cut Trio',
-    price: 5
+    name: 'LOBSTER AND CRABMEAT RAVIOLI',
+    price: 18
   },
   {
     id: 2,
@@ -21,42 +17,41 @@ const restaurantMenu = [
   },
   {
     id: 3,
-    category: 'mains',
-    name: 'Meatball Marinara',
-    price: 6.50
+    category: 'appetizer',
+    name: "DOUGH BALLS 'PIZZAEXPRESS'",
+    price: 8
   },
   {
     id: 4,
-    category: 'appetizer',
-    name: 'Double Chocolate Cookie',
-    price: 1.50
+    category: 'mains',
+    name: 'SPAGHETTI BOLOGNESE',
+    price: 14
   },
   {
     id: 5,
-    category: 'drinks',
-    name: 'Dasani Water',
-    price: 1.50
+    category: 'mains',
+    name: 'CALABRESE',
+    price: 22
   },
   {
     id: 6,
-    category: 'drinks',
-    name: 'Coke',
-    price: 1.50
+    category: 'dessert',
+    name: 'BIG BAD BROWNIE',
+    price: 7
   },
   {
     id: 7,
     category: 'appetizer',
-    name: 'Strawberry Brownie',
-    price: 1.50
+    name: 'ANTIPASTO ITALIANO',
+    price: 17
   }
 ]
 
 
-class Menu extends Component {
+class Orders extends Component {
   constructor (props) {
     super()
     this.state = {
-      testText: "NO DATA RECEIVED",
       restaurantMenu,
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
@@ -68,6 +63,19 @@ class Menu extends Component {
       },
       submitObj: {}
     }
+  }
+
+  handleSubmit = (e) => {
+        e.preventDefault()
+
+        axios.post("addtableorder", {
+          restaurantMenu: this.state.submitObj
+        })
+        .then(res => console.log(res.data))
+
+        // axios.post("additem", {
+        // })
+        // .then(res => console.log(res.data))
   }
 
   handleOnChange = (e) => {
@@ -85,17 +93,9 @@ class Menu extends Component {
       restaurantMenu: copiedRestaurantMenu,
       submitObj: tempObj
       })
+      console.log(this.state.submitObj);
     }
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-    socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
-
-    axios.post("addtableorder", {
-      restaurantMenu: this.state.submitObj
-    })
-    .then(res => console.log(res.data))
+    console.log(this.state.restaurantMenu)
   }
 
   // should be placeed into Tab component like onClick
@@ -110,22 +110,11 @@ class Menu extends Component {
     })
   }
 
-  componentDidMount(){
-
-    socket.on("orderConfirmed", (data)=>{
-      console.log(data)
-      this.setState({
-        testText: data.message
-      })
-    })
-  }
-
   render () {
-    const mains = []
     const appetizer = []
+    const mains = []
     const dessert = []
     const drinks = []
-
 
     this.state.restaurantMenu.forEach((eachMenu) => {
       if(eachMenu.category === 'mains')
@@ -172,6 +161,7 @@ class Menu extends Component {
       </tr>
       )
     })
+
     let dessertTab = dessert.map((item) => {
       return(
       <tr key={item.id}>
@@ -188,6 +178,7 @@ class Menu extends Component {
       </tr>
       )
     })
+
     let drinksTab = drinks.map((item) => {
       return(
       <tr key={item.id}>
@@ -210,11 +201,27 @@ class Menu extends Component {
     if(drinks.length === 0)drinksTab =<tr><td><h3>Coming Soon!</h3></td></tr>
 
     return (
-      <div>
-        {this.state.testText}
-        <h1>Order Here</h1>
+    <div className="row">
+      <div className="col s5">
+      <h1>View Order</h1>
+
+      <ul className="collection">
+        <li className="collection-item avatar">
+          <span className="title">Name</span>
+          <p>Price</p>
+          <p>Quanity</p>
+        </li>
+      </ul>
+
+      </div>
+
+      <div className="col s7">
+          <h1>Order Here</h1>
+
         <form>
-          <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab } >
+
+          <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab }>
+
             <Tab title='Appetizers' active={this.state.tab.Appetizers}>
               <Table>
                 <thead>
@@ -224,12 +231,12 @@ class Menu extends Component {
                     <th data-field='price'>Quantity</th>
                   </tr>
                 </thead>
-
                 <tbody>
                     {appetizerTab}
                 </tbody>
               </Table>
             </Tab>
+
             <Tab title='Mains' active={this.state.tab.Mains}>
               <Table>
                 <thead>
@@ -244,6 +251,7 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
+
             <Tab title='Dessert' active={this.state.tab.Dessert}>
               <Table>
                 <thead>
@@ -258,6 +266,7 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
+
             <Tab title='Drinks' active={this.state.tab.Drinks}>
               <Table>
                 <thead>
@@ -272,15 +281,23 @@ class Menu extends Component {
                 </tbody>
               </Table>
             </Tab>
+
           </Tabs>
-          <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
-        </form>
+
+            <div className="row">
+
+              <div className="col s5">
+                <Button onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
+              </div>
+
+            </div>
+
+          </form>
 
       </div>
+    </div>
     )
   }
 }
 
-
-
-export default Menu
+export default Orders

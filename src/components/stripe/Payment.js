@@ -7,7 +7,7 @@ class Payment extends Component {
   render () {
     return (
       <div>
-      <h1>Payment Page</h1>
+      <p>click here to pay</p>
       <StripeProvider apiKey="pk_test_7agSFzp7ZGjjv2ASWyG78njN">
         <MyStoreCheckout />
       </StripeProvider>

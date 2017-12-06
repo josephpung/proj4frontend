@@ -4,9 +4,12 @@ import Home from './Home'
 import Register from './Register'
 import Login from './Login'
 import Qrcode from './Qrcode'
+
 import Menu from './staff/Menu'
+import Menu from './customer/Menu'
+import Order from './customer/Order'
 import Tables from './staff/Tables'
-import Order from './staff/Order'
+import Orders from './staff/Orders'
 import Kitchen from './staff/Kitchen'
 import Payment from './stripe/Payment'
 
@@ -25,7 +28,8 @@ const Main = () => (
       <Route path='/qrcode' component={Qrcode}/>
       <Route path='/tables' component={Tables}/>
       <Route path='/menu' component={Menu}/>
-      <Route path='/table/:restoTableId' component={Order}/>
+      <Route path='/table/:restoTableId' component={Orders}/>
+      <Route path='/order' component={Order}/>
       <Route path='/kitchen' component={Kitchen}/>
       <Route path='/payment' component={Payment}/>
 
