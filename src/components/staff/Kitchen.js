@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { Col, Card, Row, Button } from 'react-materialize'
 
+
 // hard coded Kitchen order prop data
 
-const tableOutput = [
+// when we search for tableOutput from database, it must automatically filter only food that has status
+// preparing
+let tableOutput = [
   {
     id: 123,
     dishes: [
@@ -13,7 +16,7 @@ const tableOutput = [
             {id: 7, category: 'appetizer', name: 'Strawberry Brownie', price: 1.5, quantity: '1'}
     ],
     tableNumber: 1,
-    status: 'preparing/completed'
+    status: 'preparing'
   },
   {
     id: 124,
@@ -23,9 +26,11 @@ const tableOutput = [
             {id: 5, category: 'drinks', name: 'Pineapple Fried Rice', price: 1.5, quantity: '1'},
             {id: 7, category: 'appetizer', name: 'Touch Food', price: 1.5, quantity: '3'}
     ],
-    tableNumber: 2
+    tableNumber: 2,
+    status: 'preparing'
   }
 ]
+
 
 export default class Kitchen extends Component {
   constructor (props) {
@@ -34,13 +39,12 @@ export default class Kitchen extends Component {
       tableOutput,
       bgColor: 'green accent-1',
       changeColor: true,
-      foodReady: []
+      foodReady: [],
+      foodDelivered: []
     }
   }
 
-
   handleChangeBG (e, dish) {
-    console.log(this.state.foodReady)
     const tableNum = e.target.id
     const foodThatIsReady = {}
     foodThatIsReady[`Table ${tableNum}`] = `${dish.quantity} x ${dish.name}`
@@ -57,48 +61,50 @@ export default class Kitchen extends Component {
     this.setState({
       foodReady: updatingReadyArr
     })
-
-   //  e.target.className = this.state.bgColor
-   //  this.state.changeColor = !this.state.changeColor
-   //
-   //  if(this.state.changeColor) {
-   //    var filteredArray = [...this.state.foodReady].filter(item => {
-   //      return item.toString() !== foodThatIsReady.toString()
-   //    })
-   //  this.setState({
-   //    bgColor: 'orange lighten-5',
-   //    foodReady: filteredArray
-   // })
-   //  }
-   //  else {
-   //    var copiedArray = [...this.state.foodReady, foodThatIsReady ]
-   //    this.setState({
-   //      bgColor: 'green accent-1',
-   //      foodReady: copiedArray
-   //    })
-   //  }
   }
 
   handleFoodIsReady = (e) => {
-    var tableNumber = e.target.id
+    const filterFromTwoArrays = [...this.state.foodReady].filter((foodItem) => {
+      return ![...this.state.foodDelivered].includes(foodItem)
+    })
+    const foodDelivered = [...this.state.foodDelivered, ...filterFromTwoArrays]
+    // send alert to staff here!
+    this.setState({
+      foodDelivered: foodDelivered
+    })
+    console.log(filterFromTwoArrays, this.state.foodDelivered);
   }
 
-  handleRemoveOrder = (e) => {
-    const tableToRemove = e.target.id
-    const copiedArray = [...this.state.tableOutput]
-    let filteredArray = copiedArray.filter(order => {
-      return order.tableNumber !== Number(tableToRemove)
+  handleRemoveOrder(e,foodOrder) {
+    console.log(foodOrder)
+    const tableToRemove = foodOrder.tableNumber // get table Number
+    const copiedArray = [...this.state.foodDelivered]
+    // only if the length of Order Dishes match the dishes delivered, then order can be removed
+    const objectKeyArray = [] // get objey key so to compare with string
+    copiedArray.map((item) => {
+    for (const key in item) {
+      objectKeyArray.push(key)
+    }
     })
-    this.setState({
-      tableOutput: filteredArray
+    console.log(objectKeyArray)
+    const numberOfDishesOrdered = foodOrder.dishes.length // get length of dishes ordered
+    const isTableFoodAllServed = objectKeyArray.filter(eachKey => {
+      return [eachKey].includes(`Table ${tableToRemove}`)
     })
+    if (numberOfDishesOrdered === isTableFoodAllServed.length) {
+      let filteredArray = [...this.state.tableOutput].filter(order => {
+        return order.tableNumber !== Number(tableToRemove)
+      })
+      this.setState({
+        tableOutput: filteredArray
+      })
+    }
   }
 
   render () {
-    var test2 = this.state.tableOutput.map((foodOrder) => {
+    const test2 = this.state.tableOutput.map((foodOrder) => {
       return foodOrder.dishes
     })
-
 
     var test11 = test2.map((x, index) => {
       var tableNum = this.state.tableOutput[index].tableNumber
@@ -118,7 +124,7 @@ export default class Kitchen extends Component {
             actions= {[<Button id={foodOrder.tableNumber} onClick={this.handleFoodIsReady} waves='light'>Food Ready</Button>]}>
             {test11[index]}
             <div>
-		         <Button id={foodOrder.tableNumber} onClick={this.handleRemoveOrder} waves='light'>Clear Order</Button>
+		         <Button id={foodOrder.tableNumber} value={foodOrder} onClick={(e) => this.handleRemoveOrder(e, foodOrder)} waves='light'>Clear Order</Button>
            </div>
           </Card>
         </Col>
@@ -131,8 +137,27 @@ export default class Kitchen extends Component {
         <Row>
           {test}
         </Row>
-
       </div>
     )
   }
 }
+
+// drinks should be send to the bar counter
+// send alert to staff when kitchen push order
+// notification sent to staff shouldn't be sent again // completed
+// only if the length of Order Dishes match the dishes delivered, then order can be removed // completed
+// status preparing/cooked // completed
+
+
+// from delete Order
+// find id of Restotable from backend, update status to completed
+
+// bar
+
+// 2 Problems I need to solve
+// How do i split the drinks and the kitchen food => by category? or food item?
+// How do I check if an order is completed at the bar if kitchen share the same status.
+// => if kitchen completes an order
+
+// => Backend: dishes default value is preparing
+// => How can frontend talk to the backend to update the status of the dishes.

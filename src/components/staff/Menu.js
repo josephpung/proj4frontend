@@ -83,6 +83,7 @@ class Menu extends Component {
       })
     }
   }
+  // split drink tabs and kitchen tab
 
   handleSubmit = (e) => {
     e.preventDefault()
@@ -109,7 +110,8 @@ class Menu extends Component {
     const appetizer = []
     const dessert = []
     const drinks = []
-    const splitByCategory = this.state.restaurantMenu.map((eachMenu) => {
+    const splitByCategory = [...this.state.restaurantMenu]
+    splitByCategory.map((eachMenu) => {
       if(eachMenu.category === 'mains')
       return mains.push(eachMenu)
       else if(eachMenu.category === 'appetizer')
