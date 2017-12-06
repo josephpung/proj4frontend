@@ -97,10 +97,22 @@ class Menu extends Component {
       submitObj: tempObj
       })
       console.log(this.state.submitObj);
-    }
-    console.log(this.state.restaurantMenu)
-  }
 
+    } else if(Number(e.target.value) === 0) {
+      const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
+      selectedMenu.quantity = e.target.value
+
+      let tempObj = {...this.state.submitObj}
+        tempObj[e.target.name] = e.target.value
+
+      this.setState({
+        restaurantMenu: copiedRestaurantMenu,
+        submitObj: tempObj
+      })
+      console.log(this.state.submitObj);
+  }
+  console.log(this.state.restaurantMenu)
+}
   // should be placeed into Tab component like onClick
   handleTab = (tabIndex) => {
     const tempObj = {}
