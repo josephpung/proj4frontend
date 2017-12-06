@@ -31,7 +31,6 @@ let tableOutput = [
   }
 ]
 
-
 export default class Kitchen extends Component {
   constructor (props) {
     super()
@@ -80,21 +79,21 @@ export default class Kitchen extends Component {
     const tableToRemove = foodOrder.tableNumber // get table Number
     const copiedArray = [...this.state.foodDelivered]
     // only if the length of Order Dishes match the dishes delivered, then order can be removed
-    const objectKeyArray = [] // get objey key so to compare with string
+    const objectKeyArray = [] // get object key and compile into an array so that we can compare with string
     copiedArray.map((item) => {
     for (const key in item) {
       objectKeyArray.push(key)
     }
     })
     console.log(objectKeyArray)
-    const numberOfDishesOrdered = foodOrder.dishes.length // get length of dishes ordered
-    const isTableFoodAllServed = objectKeyArray.filter(eachKey => {
-      return [eachKey].includes(`Table ${tableToRemove}`)
-    })
+
+    // filter category w/o drinks and get length of dishes ordered
+    let numberOfDishesOrdered = foodOrder.dishes.filter(order => order.category !== "drinks" ).length
+    // compile in an array the key that match the table that you want to remove (key = 1, table = 1)
+    const isTableFoodAllServed = objectKeyArray.filter(eachKey => [eachKey].includes(`Table ${tableToRemove}`))
+    // if the length of the array matches the number of dishes array, can remove dishes ordered.
     if (numberOfDishesOrdered === isTableFoodAllServed.length) {
-      let filteredArray = [...this.state.tableOutput].filter(order => {
-        return order.tableNumber !== Number(tableToRemove)
-      })
+      let filteredArray = [...this.state.tableOutput].filter(order => order.tableNumber !== Number(tableToRemove))
       this.setState({
         tableOutput: filteredArray
       })
@@ -109,11 +108,13 @@ export default class Kitchen extends Component {
     var test11 = test2.map((x, index) => {
       var tableNum = this.state.tableOutput[index].tableNumber
       return x.map(dish => {
-        return (
-          <div className='' id={tableNum} key={dish.id} onClick={(e) => this.handleChangeBG(e, dish)}>
-            {dish.quantity} {dish.name}
-          </div>
-        )
+        if(dish.category !== "drinks") {
+          return (
+            <div className='' id={tableNum} key={dish.id} onClick={(e) => this.handleChangeBG(e, dish)}>
+              {dish.quantity} {dish.name}
+            </div>
+          )
+        }
       })
     })
 
