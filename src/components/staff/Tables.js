@@ -59,9 +59,12 @@ class Tables extends Component {
       }
       return (
         <Col key={index} s={2} className='grid-example'>
+
+          <Link to={"/table/"+{index}}>
           <CardPanel className={color}>
             <span>{restoTable}</span>
           </CardPanel>
+        </Link>
         </Col>
       )
     })
@@ -69,11 +72,9 @@ class Tables extends Component {
     return (
       <div>
         <h1>Select Table</h1>
-        <Link to="/table/3">
           <Row>
             {table}
           </Row>
-        </Link>
       </div>
     )
   }

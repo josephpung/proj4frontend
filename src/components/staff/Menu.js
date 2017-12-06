@@ -103,7 +103,7 @@ class Menu extends Component {
     socket.on("orderConfirmed", (data)=>{
       console.log(data)
       this.setState({
-        testText: 'DATA RECIEVED'
+        testText: data.message
       })
     })
   }
