@@ -17,7 +17,6 @@ class Tables extends Component {
         tables: tableData.data
 
       })
-      console.log(tableData.data);
     })
 
   }
@@ -31,7 +30,6 @@ class Tables extends Component {
     }
 
     const table = this.state.tables.map(table=>{
-      console.log(table.dishes);
         const color = !isEmpty(table.dishes) ? "red black-text": "green black-text"
       return (
         <Col key={table._id} s={2} className='grid-example'>
