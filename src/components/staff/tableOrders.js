@@ -3,10 +3,8 @@ import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import { connect } from 'react-redux'
 import { reloadUser } from '../../actions/userAction'
 import axios from 'axios'
-import io from 'socket.io-client';
 import { Link } from 'react-router-dom'
-
-const socket = io('/');
+import socket from '../../API/socketAPI'
 
 
 
@@ -114,7 +112,6 @@ class Orders extends Component {
         tableOrders: result.data.dishes,
         tableNumber: result.data.table_number
       })
-
       axios.get(`/menu/${result.data.restaurant_id}`)
       .then(response =>{
 
