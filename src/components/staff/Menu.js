@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
+import { connect } from 'react-redux'
+import { reloadUser } from '../../actions/userAction'
 import axios from 'axios'
 import { Link} from 'react-router-dom'
 
@@ -7,12 +9,13 @@ import { Link} from 'react-router-dom'
 import io from 'socket.io-client';
 
 const socket = io('/');
+
 const restaurantMenu = [
   {
     id: 1,
     category: 'mains',
-    name: 'Cold Cut Trio',
-    price: 5
+    name: 'LOBSTER AND CRABMEAT RAVIOLI',
+    price: 18
   },
   {
     id: 2,
@@ -22,33 +25,33 @@ const restaurantMenu = [
   },
   {
     id: 3,
-    category: 'mains',
-    name: 'Meatball Marinara',
-    price: 6.50
+    category: 'appetizer',
+    name: "DOUGH BALLS 'PIZZAEXPRESS'",
+    price: 8
   },
   {
     id: 4,
-    category: 'appetizer',
-    name: 'Double Chocolate Cookie',
-    price: 1.50
+    category: 'mains',
+    name: 'SPAGHETTI BOLOGNESE',
+    price: 14
   },
   {
     id: 5,
-    category: 'drinks',
-    name: 'Dasani Water',
-    price: 1.50
+    category: 'mains',
+    name: 'CALABRESE',
+    price: 22
   },
   {
     id: 6,
-    category: 'drinks',
-    name: 'Coke',
-    price: 1.50
+    category: 'dessert',
+    name: 'BIG BAD BROWNIE',
+    price: 7
   },
   {
     id: 7,
     category: 'appetizer',
-    name: 'Strawberry Brownie',
-    price: 1.50
+    name: 'ANTIPASTO ITALIANO',
+    price: 17
   }
 ]
 
@@ -58,7 +61,10 @@ class Menu extends Component {
     super()
     this.state = {
       testText: "NO DATA RECEIVED",
-      restaurantMenu,
+      tableNumber: "",
+      restaurantMenu: [],
+      tableOrders: {},
+      restoId: "",
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
       tab: {
@@ -71,32 +77,52 @@ class Menu extends Component {
     }
   }
 
+  reload = (e) =>{
+    this.props.refreshUser()
+  }
+
+  handleSubmit = (e) => {
+        e.preventDefault()
+        const { match: { params } } = this.props
+        axios.post("/addtableorder", {
+          id: this.state.tableNumber,
+          restaurantMenu: this.state.submitObj
+        })
+        .then(res => console.log(res.data))
+  }
+
   handleOnChange = (e) => {
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
     if (e.target.value > 0) {
-    const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
+    const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
     // update quantity to the object
     selectedMenu.quantity = e.target.value
 
     let tempObj = {...this.state.submitObj}
       tempObj[e.target.name] = e.target.value
-
     // setState for restaurantMenu
     this.setState({
       restaurantMenu: copiedRestaurantMenu,
       submitObj: tempObj
       })
-    }
+
+    }else if(Number(e.target.value) === 0) {
+      const copiedRestaurantMenu = [...this.state.restaurantMenu]
+      const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
+        delete selectedMenu.quantity
+
+      let tempObj = {...this.state.submitObj}
+
+        // tempObj[e.target.name] = e.target.value
+        delete tempObj[e.target.name]
+
+      this.setState({
+        restaurantMenu: copiedRestaurantMenu,
+        submitObj: tempObj
+      })
+
   }
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-    socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
-
-    axios.post("addtableorder", {
-      restaurantMenu: this.state.submitObj
-    })
-    .then(res => console.log(res.data))
+    console.log(this.state.restaurantMenu)
   }
 
   // should be placeed into Tab component like onClick
@@ -111,6 +137,55 @@ class Menu extends Component {
     })
   }
 
+  componentWillMount(){
+    function isEmpty( obj ) {
+      for ( var prop in obj ) {
+        return false;
+      }
+      return true;
+    }
+    console.log("mounted");
+    const { match: { params } } = this.props
+
+    this.setState({
+      localSavedOrder: this.props.user.savedOrder,
+      tableNumber: params.restoTableId
+    })
+
+    axios.get(`/table/${params.restoTableId}`)
+    .then(result=>{
+
+      this.setState({
+        tableOrders: result.data.dishes
+      })
+      axios.get(`/menu/${result.data.restaurant_id}`)
+      .then(response =>{
+        if(!isEmpty(this.state.tableOrders)){
+          let menuList = response.data.map(menuItem =>{
+            for (var key in this.state.tableOrders){
+              if(key === menuItem.name){
+                menuItem["quantity"] = this.state.tableOrders[menuItem.name]
+                return menuItem
+              }else{
+                return menuItem
+              }
+            }
+          })
+            console.log(menuList);
+          this.setState({
+            restaurantMenu: menuList
+          })
+        }else{
+          this.setState({
+            restaurantMenu: response.data
+          })
+        }
+
+      })
+    })
+
+  }
+
   componentDidMount(){
 
     socket.on("orderConfirmed", (data)=>{
@@ -122,7 +197,6 @@ class Menu extends Component {
   }
 
   render () {
-
     const mains = []
     const appetizer = []
     const dessert = []
@@ -285,6 +359,17 @@ class Menu extends Component {
   }
 }
 
+const mapStateToProps = (state) =>{
+  console.log(state.users);
+  return {
+    user: state.users
+  }
+}
 
+const mapDispatchToProps = (dispatch) =>{
+  return {
+    refreshUser: () => dispatch(reloadUser())
+  }
+}
 
-export default Menu
+export default connect(mapStateToProps,mapDispatchToProps)(Menu)
