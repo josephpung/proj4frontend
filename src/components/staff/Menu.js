@@ -5,8 +5,6 @@ import { Link} from 'react-router-dom'
 import socket from '../../API/socketAPI'
 
 
-
-
 const restaurantMenu = [
   {
     id: 1,
