@@ -155,7 +155,7 @@ class Orders extends Component {
       this.setState({
         tableOrders: result.data.dishes
       })
-      axios.get(`/menu/${result.data.restaurant_id}`)
+      axios.get(`/menu/${result.data.restaurant_id}`) 
       .then(response =>{
         if(!isEmpty(this.state.tableOrders)){
           let menuList = response.data.map(menuItem =>{

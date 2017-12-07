@@ -72,6 +72,7 @@ class Menu extends Component {
   }
 
   handleOnChange = (e) => {
+
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
     if (e.target.value > 0) {
     const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
