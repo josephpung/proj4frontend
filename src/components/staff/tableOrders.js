@@ -13,6 +13,7 @@ class Orders extends Component {
     super()
     this.state = {
       tableId: "",
+      tableNumber: "",
       restaurantMenu: [],
       tableOrders: {},
       currentDishArr: [],
@@ -36,8 +37,7 @@ class Orders extends Component {
   handleSubmit = (e) => {
         e.preventDefault()
 
-        console.log(this.state.submitObj);
-        const { match: { params } } = this.props
+        console.log(this.state.submitObj)
         axios.post("/addtableorder", {
           id: this.state.tableId,
           restaurantMenu: this.state.submitObj
@@ -109,7 +109,8 @@ class Orders extends Component {
     .then(result=>{
 
       this.setState({
-        tableOrders: result.data.dishes
+        tableOrders: result.data.dishes,
+        tableNumber: result.data.table_number
       })
       axios.get(`/menu/${result.data.restaurant_id}`)
       .then(response =>{
@@ -178,6 +179,14 @@ class Orders extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -195,6 +204,14 @@ class Orders extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -212,6 +229,14 @@ class Orders extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -228,6 +253,15 @@ class Orders extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
+
           </Input>
         </td>
       </tr>
@@ -242,7 +276,6 @@ class Orders extends Component {
 
     let order = this.state.restaurantMenu.map(dish=>{
       if(dish.quantity){
-
         return (
           <tr key={dish._id}>
             <td>{dish.name}</td>
@@ -254,11 +287,6 @@ class Orders extends Component {
 
     })
 
-    // let displayOrderList = this.state.tableOrders.map(order=>{
-    //   return (
-    //     <div key={order.id}>{order.id}</div>
-    //   )
-    // })
     if (this.props.user.type ==="user"){
       return (
         <div>
@@ -311,7 +339,7 @@ class Orders extends Component {
         		</tr>
         	</tbody>
         </Table>
-        <Link to={"/menu"} className="btn black">back to Menu</Link>
+        <Link to={"/custmenu"} className="btn black">back to Menu</Link>
         <Link to={"/menu"} className="btn right black">Pay Bill beetch</Link>
 
         </div>
@@ -320,7 +348,7 @@ class Orders extends Component {
     return (
     <div className="row">
       <div className="col s5">
-      <h1>View Order</h1>
+      <h1>Table {this.state.tableNumber}</h1>
 
       <ul className="collection">
         <li className="collection-item ">
