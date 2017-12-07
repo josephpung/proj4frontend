@@ -43,6 +43,7 @@ class Orders extends Component {
         })
         .then(res => console.log(res.data))
 
+        socket.emit("submitOrder")
   }
 
   handleOnChange = (e) => {
@@ -148,9 +149,54 @@ class Orders extends Component {
   componentDidMount(){
 
     socket.on("orderConfirmed", (data)=>{
-      this.setState({
-        testText: data.message
+      function isEmpty( obj ) {
+        for ( var prop in obj ) {
+          return false;
+        }
+        return true;
+      }
+      const { match: { params } } = this.props
+
+      axios.get(`/table/${params.restoTableId}`)
+      .then(result=>{
+
+        this.setState({
+          tableOrders: result.data.dishes,
+          tableNumber: result.data.table_number
+        })
+        axios.get(`/menu/${result.data.restaurant_id}`)
+        .then(response =>{
+
+          if(!isEmpty(this.state.tableOrders)){
+            var menuList = []
+            response.data.forEach(menuItem =>{
+              for (var key in this.state.tableOrders){
+                if(key === menuItem.name){
+
+                  menuItem["quantity"] = this.state.tableOrders[menuItem.name]
+                  menuList.push(menuItem)
+                }else{
+                  menuList.push(menuItem)
+                }
+              }
+            })
+            var unique = menuList.filter(function(elem, index, self) {
+                return index === self.indexOf(elem);
+            })
+            console.log("final: ",unique)
+            this.setState({
+              restaurantMenu: unique
+            })
+
+          }else{
+            this.setState({
+              restaurantMenu: response.data
+            })
+          }
+
+        })
       })
+
     })
   }
   render () {

@@ -75,7 +75,7 @@ export default class Kitchen extends Component {
     })
 
     // Fire the ready status to the backend socket receiver
-    socket.emit('food ready', [...filterFromTwoArrays])
+    socket.emit('foodready', [...filterFromTwoArrays])
 
 
     console.log(filterFromTwoArrays, this.state.foodDelivered);
