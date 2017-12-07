@@ -5,7 +5,7 @@ import Register from './Register'
 import Login from './Login'
 import Qrcode from './Qrcode'
 
-import custMenu from './staff/custMenu'
+import custMenu from './customer/custMenu'
 import customerTableOrder from './customer/tableOrdersCust'
 import Tables from './staff/Tables'
 import tableOrders from './staff/tableOrders'

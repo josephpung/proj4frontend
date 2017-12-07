@@ -273,7 +273,7 @@ class Orders extends Component {
     if(dessert.length === 0)dessertTab =<tr><td><h3>Coming Soon!</h3></td></tr>
     if(drinks.length === 0)drinksTab =<tr><td><h3>Coming Soon!</h3></td></tr>
 
-
+    
     let order = this.state.restaurantMenu.map(dish=>{
       if(dish.quantity){
         return (
@@ -286,65 +286,65 @@ class Orders extends Component {
       }
 
     })
-
-    if (this.props.user.type ==="user"){
-      return (
-        <div>
-        <h1 className="center">View Ordersz</h1>
-        <h5>Table Number: </h5>
-
-        <Table>
-        	<thead>
-        		<tr>
-        			<th data-field="id">Dish Name</th>
-        			<th data-field="name">Quantity</th>
-        			<th data-field="price">Total Price</th>
-        		</tr>
-        	</thead>
-
-        	<tbody>
-        		<tr>
-        			<td>Alvin</td>
-        			<td>Eclair</td>
-        			<td>$0.87</td>
-        		</tr>
-        		<tr>
-        			<td>Alan</td>
-        			<td>Jellybean</td>
-        			<td>$3.76</td>
-        		</tr>
-        	</tbody>
-        </Table>
-        <Table>
-        	<thead>
-            <tr>
-              <th></th>
-            </tr>
-        	</thead>
-        	<tbody>
-        		<tr>
-              <td></td>
-              <td className="right-align"><label>Subtotal:</label></td>
-        			<td>$22.90</td>
-        		</tr>
-            <tr>
-              <td></td>
-              <td className="right-align"><label>GST & Service Charge</label></td>
-        			<td>$2.90</td>
-        		</tr>
-            <tr>
-              <td></td>
-              <td className="right-align"><label>Total</label></td>
-        			<td>$25.90</td>
-        		</tr>
-        	</tbody>
-        </Table>
-        <Link to={"/custmenu"} className="btn black">back to Menu</Link>
-        <Link to={"/menu"} className="btn right black">Pay Bill beetch</Link>
-
-        </div>
-      )
-    }else{
+    //
+    // if (this.props.user.type ==="user"){
+    //   return (
+    //     <div>
+    //     <h1 className="center">View Ordersz</h1>
+    //     <h5>Table Number: </h5>
+    //
+    //     <Table>
+    //     	<thead>
+    //     		<tr>
+    //     			<th data-field="id">Dish Name</th>
+    //     			<th data-field="name">Quantity</th>
+    //     			<th data-field="price">Total Price</th>
+    //     		</tr>
+    //     	</thead>
+    //
+    //     	<tbody>
+    //     		<tr>
+    //     			<td>Alvin</td>
+    //     			<td>Eclair</td>
+    //     			<td>$0.87</td>
+    //     		</tr>
+    //     		<tr>
+    //     			<td>Alan</td>
+    //     			<td>Jellybean</td>
+    //     			<td>$3.76</td>
+    //     		</tr>
+    //     	</tbody>
+    //     </Table>
+    //     <Table>
+    //     	<thead>
+    //         <tr>
+    //           <th></th>
+    //         </tr>
+    //     	</thead>
+    //     	<tbody>
+    //     		<tr>
+    //           <td></td>
+    //           <td className="right-align"><label>Subtotal:</label></td>
+    //     			<td>$22.90</td>
+    //     		</tr>
+    //         <tr>
+    //           <td></td>
+    //           <td className="right-align"><label>GST & Service Charge</label></td>
+    //     			<td>$2.90</td>
+    //     		</tr>
+    //         <tr>
+    //           <td></td>
+    //           <td className="right-align"><label>Total</label></td>
+    //     			<td>$25.90</td>
+    //     		</tr>
+    //     	</tbody>
+    //     </Table>
+    //     <Link to={"/custmenu"} className="btn black">back to Menu</Link>
+    //     <Link to={"/menu"} className="btn right black">Pay Bill beetch</Link>
+    //
+    //     </div>
+    //   )
+    // }else{
     return (
     <div className="row">
       <div className="col s5">
@@ -454,7 +454,7 @@ class Orders extends Component {
     )
     }
   }
-}
+
 
 const mapStateToProps = (state) =>{
   console.log(state.users);

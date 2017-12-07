@@ -29,6 +29,7 @@ class Order extends Component {
       )
     })
 
+    
       return (
         <div>
         <h1 className="center">View Ordersz</h1>
@@ -80,8 +81,8 @@ class Order extends Component {
         		</tr>
         	</tbody>
         </Table>
-        <Link to={"/menu"} className="btn black">back to Menu</Link>
-        <Link to={"/menu"} className="btn right black">Pay Bill beetch</Link>
+        <Link to={"/custmenu"} className="btn black">back to Menu</Link>
+        <Link to={"/payment"} className="btn right black">Pay Bill beetch</Link>
 
         </div>
       )
