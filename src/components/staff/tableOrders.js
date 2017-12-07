@@ -8,59 +8,16 @@ import { Link } from 'react-router-dom'
 
 const socket = io('/');
 
-const restaurantMenu = [
-  {
-    id: 1,
-    category: 'mains',
-    name: 'LOBSTER AND CRABMEAT RAVIOLI',
-    price: 18
-  },
-  {
-    id: 2,
-    category: 'mains',
-    name: 'QUATTRO FORMAGGIO',
-    price: 15
-  },
-  {
-    id: 3,
-    category: 'appetizer',
-    name: "DOUGH BALLS 'PIZZAEXPRESS'",
-    price: 8
-  },
-  {
-    id: 4,
-    category: 'mains',
-    name: 'SPAGHETTI BOLOGNESE',
-    price: 14
-  },
-  {
-    id: 5,
-    category: 'mains',
-    name: 'CALABRESE',
-    price: 22
-  },
-  {
-    id: 6,
-    category: 'dessert',
-    name: 'BIG BAD BROWNIE',
-    price: 7
-  },
-  {
-    id: 7,
-    category: 'appetizer',
-    name: 'ANTIPASTO ITALIANO',
-    price: 17
-  }
-]
 
 
 class Orders extends Component {
   constructor (props) {
     super()
     this.state = {
-      tableNumber: "",
+      tableId: "",
       restaurantMenu: [],
       tableOrders: {},
+      currentDishArr: [],
       restoId: "",
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
@@ -80,12 +37,15 @@ class Orders extends Component {
 
   handleSubmit = (e) => {
         e.preventDefault()
+
+        console.log(this.state.submitObj);
         const { match: { params } } = this.props
         axios.post("/addtableorder", {
-          id: this.state.tableNumber,
+          id: this.state.tableId,
           restaurantMenu: this.state.submitObj
         })
         .then(res => console.log(res.data))
+
   }
 
   handleOnChange = (e) => {
@@ -111,7 +71,7 @@ class Orders extends Component {
       let tempObj = {...this.state.submitObj}
 
         // tempObj[e.target.name] = e.target.value
-        delete tempObj[e.target.name]
+       tempObj[e.target.name] = "0"
 
       this.setState({
         restaurantMenu: copiedRestaurantMenu,
@@ -119,7 +79,6 @@ class Orders extends Component {
       })
 
   }
-    console.log(this.state.restaurantMenu)
   }
 
   // should be placeed into Tab component like onClick
@@ -141,12 +100,11 @@ class Orders extends Component {
       }
       return true;
     }
-    console.log("mounted");
     const { match: { params } } = this.props
 
     this.setState({
       localSavedOrder: this.props.user.savedOrder,
-      tableNumber: params.restoTableId
+      tableId: params.restoTableId
     })
 
     axios.get(`/table/${params.restoTableId}`)
@@ -155,23 +113,26 @@ class Orders extends Component {
       this.setState({
         tableOrders: result.data.dishes
       })
-      axios.get(`/menu/${result.data.restaurant_id}`) 
+      axios.get(`/menu/${result.data.restaurant_id}`)
       .then(response =>{
+
         if(!isEmpty(this.state.tableOrders)){
-          let menuList = response.data.map(menuItem =>{
+          var menuList = []
+          response.data.forEach(menuItem =>{
             for (var key in this.state.tableOrders){
               if(key === menuItem.name){
                 menuItem["quantity"] = this.state.tableOrders[menuItem.name]
-                return menuItem
+                menuList.push(menuItem)
               }else{
-                return menuItem
+                menuList.push(menuItem)
               }
             }
           })
-            console.log(menuList);
           this.setState({
             restaurantMenu: menuList
           })
+          console.log(menuList);
+
         }else{
           this.setState({
             restaurantMenu: response.data
@@ -281,6 +242,20 @@ class Orders extends Component {
     if(drinks.length === 0)drinksTab =<tr><td><h3>Coming Soon!</h3></td></tr>
 
 
+    let order = this.state.restaurantMenu.map(dish=>{
+      if(dish.quantity){
+
+        return (
+          <tr key={dish._id}>
+            <td>{dish.name}</td>
+            <td>{dish.quantity}</td>
+            <td>${dish.price*dish.quantity}</td>
+          </tr>
+        )
+      }
+
+    })
+
     // let displayOrderList = this.state.tableOrders.map(order=>{
     //   return (
     //     <div key={order.id}>{order.id}</div>
@@ -350,9 +325,19 @@ class Orders extends Component {
       <h1>View Order</h1>
 
       <ul className="collection">
-        <li className="collection-item avatar">
-          {/* {displayOrderList} */}
-          {/* {this.state.localSavedOrder} */}
+        <li className="collection-item ">
+          <Table>
+            <thead>
+              <tr>
+                <th>Dish</th>
+                <th>Quantity</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {order}
+            </tbody>
+          </Table>
         </li>
       </ul>
 
