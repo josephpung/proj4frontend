@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import axios from 'axios'
 import { Link} from 'react-router-dom'
+import socket from '../../API/socketAPI'
 
 
-import io from 'socket.io-client';
 
-const socket = io('/');
+
 const restaurantMenu = [
   {
     id: 1,

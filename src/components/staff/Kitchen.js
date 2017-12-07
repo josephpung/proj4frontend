@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Col, Card, Row, Button } from 'react-materialize'
+import socket from '../../API/socketAPI'
 
 // hard coded Kitchen order prop data
 const tableOutput = [
@@ -66,6 +67,7 @@ export default class Kitchen extends Component {
     this.setState({
       foodDelivered: foodDelivered
     })
+    // Send the ready status to the 
   }
 
   handleRemoveOrder = (e) => {
