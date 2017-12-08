@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
-import { connect } from 'react-redux'
-import { reloadUser } from '../../actions/userAction'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -14,6 +12,10 @@ class Menu extends Component {
       testText: "NO DATA RECEIVED",
       errorMessage: "",
       restaurantMenu: [],
+      restaurantMenuDisplay: [],
+      tableOrders: {},
+      hideMenu: false,
+      tableNumber:"",
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
       tab: {
@@ -26,20 +28,6 @@ class Menu extends Component {
     }
   }
 
-  reload = (e) =>{
-    this.props.refreshUser()
-  }
-
-  handleSubmit = (e) => {
-        e.preventDefault()
-        const { match: { params } } = this.props
-        axios.post("/addtableorder", {
-          id: this.state.tableNumber,
-          restaurantMenu: this.state.submitObj
-        })
-        .then(res => console.log(res.data))
-  }
-
   handleOnChange = (e) => {
 
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
@@ -50,11 +38,13 @@ class Menu extends Component {
 
     let tempObj = {...this.state.submitObj}
       tempObj[e.target.name] = e.target.value
+
     // setState for restaurantMenu
     this.setState({
       restaurantMenu: copiedRestaurantMenu,
       submitObj: tempObj
       })
+
     }else if(Number(e.target.value) === 0) {
       const copiedRestaurantMenu = [...this.state.restaurantMenu]
       const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
@@ -69,27 +59,28 @@ class Menu extends Component {
         restaurantMenu: copiedRestaurantMenu,
         submitObj: tempObj
       })
+      console.log(tempObj);
 
   }
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    if (!this.props.user.loggedIn){
-      this.setState({
-        errorMessage: "Please login to save order"
-      })
-    }else{
+    const { match: { params } } = this.props
 
-    socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
-
-    axios.post("/save_user_order", {
-      userId: this.props.user.id,
-      orders: this.state.submitObj
+    axios.post("/adduserorder", {
+      id: params.restoTableId,
+      restaurantMenu: this.state.submitObj
     })
     .then(res => console.log(res.data))
+
+    socket.emit("submitOrder")
   }
 
+  toggle =(e)=>{
+    this.setState({
+      hideMenu: !this.state.hideMenu
+    })
   }
 
   // should be placeed into Tab component like onClick
@@ -103,70 +94,122 @@ class Menu extends Component {
       tab: tempObj
     })
   }
-
   componentWillMount(){
+    const { match: { params } } = this.props
+    axios.get(`/table/${params.restoTableId}`)
+    .then(result=>{
+
+      this.setState({
+        tableNumber: result.data.table_number
+      })
+      axios.get(`/menu/${result.data.restaurant_id}`)
+      .then(response =>{
+        console.log("this one", response.data);
+        this.setState({
+            restaurantMenuDisplay: response.data
+          })
+      })
+
+    })
+
+    ///////
     function isEmpty( obj ) {
       for ( var prop in obj ) {
         return false;
       }
       return true;
     }
-    console.log("mounted");
-    const { match: { params } } = this.props
-
-    this.setState({
-      localSavedOrder: this.props.user.savedOrder,
-      tableNumber: params.restoTableId
-    })
-
+    ///////
     axios.get(`/table/${params.restoTableId}`)
     .then(result=>{
 
       this.setState({
-        tableOrders: result.data.dishes
+        tableOrders: result.data.dishes,
+        tableNumber: result.data.table_number
       })
       axios.get(`/menu/${result.data.restaurant_id}`)
       .then(response =>{
+        var x = response.data
         if(!isEmpty(this.state.tableOrders)){
-          let menuList = response.data.map(menuItem =>{
+          var menuList = []
+          x.forEach(menuItem =>{
             for (var key in this.state.tableOrders){
               if(key === menuItem.name){
+
                 menuItem["quantity"] = this.state.tableOrders[menuItem.name]
-                return menuItem
+                menuList.push(menuItem)
               }else{
-                return menuItem
+                menuList.push(menuItem)
               }
             }
           })
-            console.log(menuList);
-          this.setState({
-            restaurantMenu: menuList
+          var unique = menuList.filter(function(elem, index, self) {
+              return index === self.indexOf(elem);
           })
+          this.setState({
+            restaurantMenu: unique,
+            restaurantMenuDisplay: response.data
+          })
+
         }else{
           this.setState({
-            restaurantMenu: response.data
+            restaurantMenu: response.data,
+            restaurantMenuDisplay: response.data
           })
         }
 
       })
     })
-
   }
-
   componentDidMount(){
-
+      const { match: { params } } = this.props
     socket.on("orderConfirmed", (data)=>{
-      this.setState({
-        testText: data.message
+      function isEmpty( obj ) {
+        for ( var prop in obj ) {
+          return false;
+        }
+        return true;
+      }
+      ///////
+      axios.get(`/table/${params.restoTableId}`)
+      .then(result=>{
+
+        this.setState({
+          tableOrders: result.data.dishes,
+          tableNumber: result.data.table_number
+        })
+        axios.get(`/menu/${result.data.restaurant_id}`)
+        .then(response =>{
+          var x =response.data
+          if(!isEmpty(this.state.tableOrders)){
+            var menuList = []
+            x.forEach(menuItem =>{
+              for (var key in this.state.tableOrders){
+                if(key === menuItem.name){
+
+                  menuItem["quantity"] = this.state.tableOrders[menuItem.name]
+                  menuList.push(menuItem)
+                }else{
+                  menuList.push(menuItem)
+                }
+              }
+            })
+            var unique = menuList.filter(function(elem, index, self) {
+                return index === self.indexOf(elem);
+            })
+            console.log("final: ",unique)
+            this.setState({
+              restaurantMenuDisplay: unique
+            })
+
+          }else{
+            this.setState({
+              restaurantMenu: response.data
+            })
+          }
+
+        })
       })
-    })
-    const { match: { params } } = this.props
-    axios.get(`/menu/${params.restoId}`)
-    .then(res=>{
-      this.setState({
-        restaurantMenu: res.data
-      })
-      console.log(res.data);
     })
   }
 
@@ -175,7 +218,6 @@ class Menu extends Component {
     const appetizer = []
     const dessert = []
     const drinks = []
-
     this.state.restaurantMenu.forEach((eachMenu) => {
       if(eachMenu.category === 'mains')
       return mains.push(eachMenu)
@@ -199,6 +241,14 @@ class Menu extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -216,6 +266,14 @@ class Menu extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -232,6 +290,14 @@ class Menu extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -247,6 +313,14 @@ class Menu extends Component {
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
+            <option value='3'>3</option>
+            <option value='4'>4</option>
+            <option value='5'>5</option>
+            <option value='6'>6</option>
+            <option value='7'>7</option>
+            <option value='8'>8</option>
+            <option value='9'>9</option>
+            <option value='10'>10</option>
           </Input>
         </td>
       </tr>
@@ -258,10 +332,82 @@ class Menu extends Component {
     if(dessert.length === 0)dessertTab =<tr><td><h3>Coming Soon!</h3></td></tr>
     if(drinks.length === 0)drinksTab =<tr><td><h3>Coming Soon!</h3></td></tr>
 
+
+    let order = this.state.restaurantMenuDisplay.map(dish=>{
+      if(dish.quantity){
+        return (
+          <tr key={dish._id}>
+            <td>{dish.name}</td>
+            <td>{dish.quantity}</td>
+            <td>${dish.price*dish.quantity}</td>
+          </tr>
+        )
+      }
+
+    })
+
+    let totalPrice = this.state.restaurantMenu.length >0 ? this.state.restaurantMenu.map(dish=>{
+        return  dish.quantity!== undefined ? dish.price*dish.quantity : 0 }).reduce((a,b)=>{ return a+b}) : 0
+
+    if(this.state.hideMenu){
+      return (
+        <div>
+        <h1 className="center">Orders</h1>
+
+        <div className="col s5">
+        <h4 className="center">Table {this.state.tableNumber}</h4>
+
+        <ul className="collection">
+          <li className="collection-item ">
+            <Table>
+              <thead>
+                <tr>
+                  <th>Dish</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order}
+              </tbody>
+            </Table>
+          </li>
+        </ul>
+
+        </div>
+        <Table>
+        	<thead>
+            <tr>
+              <th></th>
+            </tr>
+        	</thead>
+        	<tbody>
+        		<tr>
+              <td></td>
+              <td className="right-align"><label>Subtotal:</label></td>
+        			<td>${totalPrice}</td>
+        		</tr>
+            <tr>
+              <td></td>
+              <td className="right-align"><label>GST & Service Charge</label></td>
+        			<td>${(totalPrice*.1).toFixed(2)}</td>
+        		</tr>
+            <tr>
+              <td></td>
+              <td className="right-align"><label>Total</label></td>
+        			<td>${(totalPrice*1.1).toFixed(2)}</td>
+        		</tr>
+        	</tbody>
+        </Table>
+        <Button onClick={e => this.toggle(e)}>Menu</Button>
+        <Link to={""} className="btn right black">Pay Bill</Link>
+
+        </div>
+      )
+    }else{
     return (
       <div>
-        <h1 className="center">Kindly Select Dishes</h1>
-        <p className="center">Saved dishes cannot be modified, please take note</p>
+        <h1>Menu</h1>
 
         <h2 className="red-text">{this.state.errorMessage}</h2>
         <form>
@@ -327,18 +473,19 @@ class Menu extends Component {
           <div className="row red-text">
             Please note that this order is only sent to the kitchen upon confirmation at the restaurant
           </div>
-          <Button onClick={e => this.handleSubmit(e)} waves='light'>Save Order</Button>
-          <Link to={"/customer_table_order"} className="btn right">View Bill</Link>
+          <Button className="black" onClick={e => this.handleSubmit(e)} waves='light'>Confirm Order</Button>
+
+          <Button className="black right" onClick={e => this.toggle(e)}>View Bill</Button>
 
         </form>
 
       </div>
     )
+    }
   }
 }
 
 const mapStateToProps = (state) =>{
-  console.log(state.users);
   return {
     user: state.users
   }
