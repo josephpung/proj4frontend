@@ -503,7 +503,7 @@ class Orders extends Component {
     </div>
     )
     }
-  }
+
 
 
 const mapStateToProps = (state) =>{
@@ -517,5 +517,6 @@ const mapDispatchToProps = (dispatch) =>{
     refreshUser: () => dispatch(reloadUser())
   }
 }
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(Orders)
