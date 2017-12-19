@@ -92,7 +92,7 @@ class Menu extends Component {
     e.preventDefault()
     socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
 
-    axios.post("addtableorder", {
+    axios.post("/staff/addtableorder", {
       restaurantMenu: this.state.submitObj
     })
     // .then(res => console.log(res.data))

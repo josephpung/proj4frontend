@@ -20,7 +20,7 @@ class App extends Component {
     })
   }
   submitDish(e){
-    axios.post("/additems",this.state.dishObj)
+    axios.post("/staff/additems",this.state.dishObj)
 
   }
 
@@ -32,8 +32,8 @@ class App extends Component {
     })
   }
   submitResto(e){
-    axios.post("/addrestaurant",this.state.restaurantObj)
-    
+    axios.post("/staff/addrestaurant",this.state.restaurantObj)
+
   }
 
   render() {

@@ -12,7 +12,7 @@ class Tables extends Component {
     }
   }
   componentWillMount(){
-    axios.get("/allTables")
+    axios.get("/display_data/allTables")
     .then(tableData=>{
       this.setState({
         tables: tableData.data
@@ -23,7 +23,7 @@ class Tables extends Component {
 
   componentDidMount() {
     socket.on('orderConfirmed', (data)=>{
-      axios.get("/allTables")
+      axios.get("/display_data/allTables")
       .then(tableData=>{
         this.setState({
           tables: tableData.data

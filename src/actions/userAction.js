@@ -3,13 +3,13 @@ import axios from 'axios'
 export function login(data){
   return function (dispatch){
 
-    axios.post("/login",{
+    axios.post("/authentication/login",{
         email: data.email,
         password: data.password
       })
       .then(res=>{
         dispatch({type: res.data.status, payload: res.data.userData})
-        console.log("response from server",res.data);
+        // console.log("response from server",res.data);
       })
   }
 }
@@ -17,46 +17,21 @@ export function login(data){
 export function logout(){
   return function (dispatch){
 
-    axios.get("/logout")
+    axios.get("/authentication/logout")
       .then(res=>{
         dispatch({type: res.data.status, payload: res.data.userData})
-        console.log("logout response from server",res.data);
+        // console.log("logout response from server",res.data);
       })
   }
 }
 
-export function reloadUser(){
-  return function (dispatch){
-    axios.get("/currentUser")
-    .then(res=>{
-      dispatch({type: "loginSuccess", payload: res.data.user})
-    })
-
-  }
-
-}
-
-
-
-
-// store.dispatch((dispatch)=>{
-//   dispatch({type: "FETCH_USERS_START"})
-//   axios.post("/login",{
-//     email: "goldenpummel@live.com",
-//     password: "password"
-//   })
-//   .then(res=>{
-//     dispatch({type: res.data.status, payload: res.data.userData})
-//     console.log("logged in", res.data.userData);
-//   })
-//   .then(()=>{
-//     axios.get("logout")
+// export function reloadUser(){
+//   return function (dispatch){
+//     axios.get("/currentUser")
 //     .then(res=>{
-//       console.log(res.data);
+//       dispatch({type: "loginSuccess", payload: res.data.user})
 //     })
 //
-//   })
-//   // do something async
-//   dispatch({type: "FETCH_"})
+//   }
 //
-// })
+// }

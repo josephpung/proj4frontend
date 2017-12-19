@@ -67,7 +67,7 @@ class Menu extends Component {
 
     socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
 
-    axios.post("/save_user_order", {
+    axios.post("/user/save_user_order", {
       userId: this.props.user.id,
       orders: this.state.submitObj
     })
@@ -96,7 +96,7 @@ class Menu extends Component {
       })
     })
     const { match: { params } } = this.props
-    axios.get(`/menu/${params.restoId}`)
+    axios.get(`/display_data/menu/${params.restoId}`)
     .then(res=>{
       this.setState({
         restaurantMenu: res.data

@@ -16,7 +16,7 @@ class Home extends Component {
 }
   componentWillMount(){
     var temp = []
-    axios.get('/main')
+    axios.get('/display_data/main')
     .then(response=>{
       temp = response.data.resto
       this.setState({

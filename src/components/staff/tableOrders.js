@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import { connect } from 'react-redux'
-import { reloadUser } from '../../actions/userAction'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import socket from '../../API/socketAPI'
@@ -30,14 +29,11 @@ class Orders extends Component {
     }
   }
 
-  reload = (e) =>{
-    this.props.refreshUser()
-  }
 
   handleSubmit = (e) => {
         e.preventDefault()
 
-        axios.post("/addtableorder", {
+        axios.post("/staff/addtableorder", {
           id: this.state.tableId,
           restaurantMenu: this.state.submitObj
         })
@@ -105,14 +101,14 @@ class Orders extends Component {
       tableId: params.restoTableId
     })
 
-    axios.get(`/table/${params.restoTableId}`)
+    axios.get(`/display_data/table/${params.restoTableId}`)
     .then(result=>{
 
       this.setState({
         tableOrders: result.data.dishes,
         tableNumber: result.data.table_number
       })
-      axios.get(`/menu/${result.data.restaurant_id}`)
+      axios.get(`/display_data/menu/${result.data.restaurant_id}`)
       .then(response =>{
 
         if(!isEmpty(this.state.tableOrders)){
@@ -156,14 +152,14 @@ class Orders extends Component {
       }
       const { match: { params } } = this.props
 
-      axios.get(`/table/${params.restoTableId}`)
+      axios.get(`/display_data/table/${params.restoTableId}`)
       .then(result=>{
 
         this.setState({
           tableOrders: result.data.dishes,
           tableNumber: result.data.table_number
         })
-        axios.get(`/menu/${result.data.restaurant_id}`)
+        axios.get(`/display_data/menu/${result.data.restaurant_id}`)
         .then(response =>{
 
           if(!isEmpty(this.state.tableOrders)){
@@ -387,7 +383,7 @@ class Orders extends Component {
         		</tr>
         	</tbody>
         </Table>
-        <Link to={"/custmenu"} className="btn black">back to Menu</Link>
+        <Link to={"/orders/"+this.state.tableId} className="btn black">back to Menu</Link>
         <Link to={"/menu"} className="btn right black">Pay Bill beetch</Link>
 
         </div>
@@ -495,7 +491,6 @@ class Orders extends Component {
             </div>
 
           </form>
-          <Button onClick={e => this.reload(e)} waves='light'>Refresh User</Button>
 
       </div>
     </div>
@@ -510,10 +505,5 @@ const mapStateToProps = (state) =>{
   }
 }
 
-const mapDispatchToProps = (dispatch) =>{
-  return {
-    refreshUser: () => dispatch(reloadUser())
-  }
-}
 
-export default connect(mapStateToProps,mapDispatchToProps)(Orders)
+export default connect(mapStateToProps)(Orders)
