@@ -59,7 +59,6 @@ class Menu extends Component {
         restaurantMenu: copiedRestaurantMenu,
         submitObj: tempObj
       })
-      console.log(tempObj);
 
   }
   }
@@ -72,7 +71,7 @@ class Menu extends Component {
       id: params.restoTableId,
       restaurantMenu: this.state.submitObj
     })
-    .then(res => console.log(res.data))
+    // .then(res => console.log(res.data))
 
     socket.emit("submitOrder")
   }
@@ -104,7 +103,6 @@ class Menu extends Component {
       })
       axios.get(`/menu/${result.data.restaurant_id}`)
       .then(response =>{
-        console.log("this one", response.data);
         this.setState({
             restaurantMenuDisplay: response.data
           })
@@ -197,7 +195,6 @@ class Menu extends Component {
             var unique = menuList.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })
-            console.log("final: ",unique)
             this.setState({
               restaurantMenuDisplay: unique
             })

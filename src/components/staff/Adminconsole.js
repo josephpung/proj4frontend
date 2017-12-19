@@ -20,11 +20,8 @@ class App extends Component {
     })
   }
   submitDish(e){
-    console.log(this.state.dishObj)
     axios.post("/additems",this.state.dishObj)
-    .then(response=>{
-      console.log(response);
-    })
+
   }
 
   handleResto = (e) =>{
@@ -35,11 +32,8 @@ class App extends Component {
     })
   }
   submitResto(e){
-    console.log(this.state.restaurantObj)
     axios.post("/addrestaurant",this.state.restaurantObj)
-    .then(response=>{
-      console.log(response);
-    })
+    
   }
 
   render() {

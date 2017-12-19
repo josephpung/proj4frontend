@@ -78,11 +78,9 @@ export default class Kitchen extends Component {
     socket.emit('foodready', [...filterFromTwoArrays])
 
 
-    console.log(filterFromTwoArrays, this.state.foodDelivered);
   }
 
   handleRemoveOrder(e,foodOrder) {
-    console.log(foodOrder)
     const tableToRemove = foodOrder.tableNumber // get table Number
     const copiedArray = [...this.state.foodDelivered]
     // only if the length of Order Dishes match the dishes delivered, then order can be removed
@@ -92,7 +90,6 @@ export default class Kitchen extends Component {
       objectKeyArray.push(key)
     }
     })
-    console.log(objectKeyArray)
 
     // filter category w/o drinks and get length of dishes ordered
     let numberOfDishesOrdered = foodOrder.dishes.filter(order => order.category !== "drinks" ).length

@@ -41,7 +41,7 @@ class Orders extends Component {
           id: this.state.tableId,
           restaurantMenu: this.state.submitObj
         })
-        .then(res => console.log(res.data))
+        // .then(res => console.log(res.data))
 
         socket.emit("submitOrder")
   }
@@ -131,7 +131,6 @@ class Orders extends Component {
           var unique = menuList.filter(function(elem, index, self) {
               return index === self.indexOf(elem);
           })
-          console.log("final: ",unique)
           this.setState({
             restaurantMenu: unique
           })
@@ -183,7 +182,6 @@ class Orders extends Component {
             var unique = menuList.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })
-            console.log("final: ",unique)
             this.setState({
               restaurantMenu: unique
             })

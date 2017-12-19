@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import socket from '../../API/socketAPI'
 
@@ -72,7 +71,7 @@ class Menu extends Component {
       userId: this.props.user.id,
       orders: this.state.submitObj
     })
-    .then(res => console.log(res.data))
+    // .then(res => console.log(res.data))
   }
 
   }
@@ -102,7 +101,6 @@ class Menu extends Component {
       this.setState({
         restaurantMenu: res.data
       })
-      console.log(res.data);
     })
   }
 

@@ -95,7 +95,7 @@ class Menu extends Component {
     axios.post("addtableorder", {
       restaurantMenu: this.state.submitObj
     })
-    .then(res => console.log(res.data))
+    // .then(res => console.log(res.data))
   }
 
   // should be placeed into Tab component like onClick
@@ -113,7 +113,6 @@ class Menu extends Component {
   componentDidMount(){
 
     socket.on("orderConfirmed", (data)=>{
-      console.log(data)
       this.setState({
         testText: data.message
       })

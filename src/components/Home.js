@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Icon} from 'react-materialize'
+// import { Icon} from 'react-materialize'
 import axios from 'axios'
 
 
@@ -15,7 +15,6 @@ class Home extends Component {
   }
 }
   componentWillMount(){
-    console.log(this.props.user);
     var temp = []
     axios.get('/main')
     .then(response=>{

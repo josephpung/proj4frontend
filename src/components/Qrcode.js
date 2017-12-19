@@ -27,7 +27,6 @@ class Qrcode extends Component {
   componentDidUpdate () {
       if(this.state.result !== 'No result'){
         this.setState({ redirect: true })
-        console.log('mounted')
       }
 
     }
