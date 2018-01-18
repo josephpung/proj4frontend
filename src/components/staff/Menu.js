@@ -1,18 +1,62 @@
 import React, { Component } from 'react'
 import { Tabs, Tab, Table, Input, Button} from 'react-materialize'
-import { connect } from 'react-redux'
-import { reloadUser } from '../../actions/userAction'
 import axios from 'axios'
-import { connect } from 'react-redux'
+import { Link} from 'react-router-dom'
 import socket from '../../API/socketAPI'
+
+
+const restaurantMenu = [
+  {
+    id: 1,
+    category: 'mains',
+    name: 'Cold Cut Trio',
+    price: 5
+  },
+  {
+    id: 2,
+    category: 'mains',
+    name: 'QUATTRO FORMAGGIO',
+    price: 15
+  },
+  {
+    id: 3,
+    category: 'mains',
+    name: 'Meatball Marinara',
+    price: 6.50
+  },
+  {
+    id: 4,
+    category: 'appetizer',
+    name: 'Double Chocolate Cookie',
+    price: 1.50
+  },
+  {
+    id: 5,
+    category: 'drinks',
+    name: 'Dasani Water',
+    price: 1.50
+  },
+  {
+    id: 6,
+    category: 'drinks',
+    name: 'Coke',
+    price: 1.50
+  },
+  {
+    id: 7,
+    category: 'appetizer',
+    name: 'Strawberry Brownie',
+    price: 1.50
+  }
+]
+
 
 class Menu extends Component {
   constructor (props) {
     super()
     this.state = {
       testText: "NO DATA RECEIVED",
-      errorMessage: "",
-      restaurantMenu: [],
+      restaurantMenu,
       currentTab: 0,
       category: ['Appetizers', 'Mains', 'Dessert', 'Drinks' ],
       tab: {
@@ -25,70 +69,33 @@ class Menu extends Component {
     }
   }
 
-  reload = (e) =>{
-    this.props.refreshUser()
-  }
-
-  handleSubmit = (e) => {
-        e.preventDefault()
-        const { match: { params } } = this.props
-        axios.post("/addtableorder", {
-          id: this.state.tableNumber,
-          restaurantMenu: this.state.submitObj
-        })
-        .then(res => console.log(res.data))
-  }
-
   handleOnChange = (e) => {
 
     const copiedRestaurantMenu = [...this.state.restaurantMenu]
-    if (Number(e.target.value) > 0) {
-    const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
+    if (e.target.value > 0) {
+    const selectedMenu = copiedRestaurantMenu.find(menu => menu.id === Number(e.target.id))
     // update quantity to the object
     selectedMenu.quantity = e.target.value
 
     let tempObj = {...this.state.submitObj}
       tempObj[e.target.name] = e.target.value
+
     // setState for restaurantMenu
     this.setState({
       restaurantMenu: copiedRestaurantMenu,
       submitObj: tempObj
       })
-    }else if(Number(e.target.value) === 0) {
-      const copiedRestaurantMenu = [...this.state.restaurantMenu]
-      const selectedMenu = copiedRestaurantMenu.find(menu => menu._id === e.target.id)
-        delete selectedMenu.quantity
-
-      let tempObj = {...this.state.submitObj}
-
-        // tempObj[e.target.name] = e.target.value
-       tempObj[e.target.name] = "0"
-
-      this.setState({
-        restaurantMenu: copiedRestaurantMenu,
-        submitObj: tempObj
-      })
-
-  }
+    }
   }
 
   handleSubmit = (e) => {
     e.preventDefault()
-    if (!this.props.user.loggedIn){
-      this.setState({
-        errorMessage: "Please login to save order"
-      })
-    }else{
-
     socket.emit('submitOrder', '[FRONTEND]= DATA WILL COME THROUGH HERE')
 
-    axios.post("/user/save_user_order", {
-      userId: this.props.user.id,
-      orders: this.state.submitObj
+    axios.post("/staff/addtableorder", {
+      restaurantMenu: this.state.submitObj
     })
     // .then(res => console.log(res.data))
-  }
-
   }
 
   // should be placeed into Tab component like onClick
@@ -103,55 +110,6 @@ class Menu extends Component {
     })
   }
 
-  componentWillMount(){
-    function isEmpty( obj ) {
-      for ( var prop in obj ) {
-        return false;
-      }
-      return true;
-    }
-    console.log("mounted");
-    const { match: { params } } = this.props
-
-    this.setState({
-      localSavedOrder: this.props.user.savedOrder,
-      tableNumber: params.restoTableId
-    })
-
-    axios.get(`/table/${params.restoTableId}`)
-    .then(result=>{
-
-      this.setState({
-        tableOrders: result.data.dishes
-      })
-      axios.get(`/menu/${result.data.restaurant_id}`)
-      .then(response =>{
-        if(!isEmpty(this.state.tableOrders)){
-          let menuList = response.data.map(menuItem =>{
-            for (var key in this.state.tableOrders){
-              if(key === menuItem.name){
-                menuItem["quantity"] = this.state.tableOrders[menuItem.name]
-                return menuItem
-              }else{
-                return menuItem
-              }
-            }
-          })
-            console.log(menuList);
-          this.setState({
-            restaurantMenu: menuList
-          })
-        }else{
-          this.setState({
-            restaurantMenu: response.data
-          })
-        }
-
-      })
-    })
-
-  }
-
   componentDidMount(){
 
     socket.on("orderConfirmed", (data)=>{
@@ -159,20 +117,15 @@ class Menu extends Component {
         testText: data.message
       })
     })
-    const { match: { params } } = this.props
-    axios.get(`/display_data/menu/${params.restoId}`)
-    .then(res=>{
-      this.setState({
-        restaurantMenu: res.data
-      })
-    })
   }
 
   render () {
+
     const mains = []
     const appetizer = []
     const dessert = []
     const drinks = []
+
 
     this.state.restaurantMenu.forEach((eachMenu) => {
       if(eachMenu.category === 'mains')
@@ -189,11 +142,11 @@ class Menu extends Component {
 
     let appetizerTab = appetizer.map((item, index) => {
       return(
-      <tr key={item._id}>
+      <tr key={item.id}>
         <td>{item.name}</td>
-        <td>${item.price}</td>
+        <td>{item.price}</td>
         <td>
-          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -205,12 +158,12 @@ class Menu extends Component {
 
     let mainsTab = mains.map((item) => {
       return(
-      <tr key={item._id}>
+      <tr key={item.id}>
         <td>{item.name}</td>
-        <td>${item.price}</td>
+        <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -221,12 +174,12 @@ class Menu extends Component {
     })
     let dessertTab = dessert.map((item) => {
       return(
-      <tr key={item._id}>
+      <tr key={item.id}>
         <td>{item.name}</td>
-        <td>${item.price}</td>
+        <td>{item.price}</td>
         <td>
           {/* onChange */}
-          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -237,11 +190,11 @@ class Menu extends Component {
     })
     let drinksTab = drinks.map((item) => {
       return(
-      <tr key={item._id}>
+      <tr key={item.id}>
         <td>{item.name}</td>
-        <td>${item.price}</td>
+        <td>{item.price}</td>
         <td>
-          <Input s={5} id={item._id} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
+          <Input s={5} id={item.id.toString()} name={item.name} type='select' label='Quantity' defaultValue={item.quantity} onChange={this.handleOnChange}>
             <option value='0'>0</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
@@ -258,10 +211,8 @@ class Menu extends Component {
 
     return (
       <div>
-        <h1 className="center">Kindly Select Dishes</h1>
-        <p className="center">Saved dishes cannot be modified, please take note</p>
-
-        <h2 className="red-text">{this.state.errorMessage}</h2>
+        {this.state.testText}
+        <h1>Order Here</h1>
         <form>
           <Tabs className='tab-demo z-depth-1' onChange={ this.handleTab } >
             <Tab title='Appetizers' active={this.state.tab.Appetizers}>
@@ -322,11 +273,8 @@ class Menu extends Component {
               </Table>
             </Tab>
           </Tabs>
-          <div className="row red-text">
-            Please note that this order is only sent to the kitchen upon confirmation at the restaurant
-          </div>
-          <Button onClick={e => this.handleSubmit(e)} waves='light'>Save Order</Button>
-          {/* <Link to={"/customer_table_order"} className="btn right">View Bill</Link> */}
+          <Button onClick={e => this.handleSubmit(e)} waves='light'>Add To Cart</Button>
+          <Link to={"/customer_table_order"} className="btn right">View Bill</Link>
 
         </form>
 
@@ -335,11 +283,6 @@ class Menu extends Component {
   }
 }
 
-const mapStateToProps = (state) =>{
-  console.log(state.users);
-  return {
-    user: state.users
-  }
-}
 
-export default connect(mapStateToProps)(Menu)
+
+export default Menu

@@ -59,7 +59,6 @@ class Menu extends Component {
         restaurantMenu: copiedRestaurantMenu,
         submitObj: tempObj
       })
-      console.log(tempObj);
 
   }
   }
@@ -68,11 +67,11 @@ class Menu extends Component {
     e.preventDefault()
     const { match: { params } } = this.props
 
-    axios.post("/adduserorder", {
+    axios.post("/user/adduserorder", {
       id: params.restoTableId,
       restaurantMenu: this.state.submitObj
     })
-    .then(res => console.log(res.data))
+    // .then(res => console.log(res.data))
 
     socket.emit("submitOrder")
   }
@@ -96,15 +95,14 @@ class Menu extends Component {
   }
   componentWillMount(){
     const { match: { params } } = this.props
-    axios.get(`/table/${params.restoTableId}`)
+    axios.get(`/display_data/table/${params.restoTableId}`)
     .then(result=>{
 
       this.setState({
         tableNumber: result.data.table_number
       })
-      axios.get(`/menu/${result.data.restaurant_id}`)
+      axios.get(`/display_data/menu/${result.data.restaurant_id}`)
       .then(response =>{
-        console.log("this one", response.data);
         this.setState({
             restaurantMenuDisplay: response.data
           })
@@ -120,14 +118,14 @@ class Menu extends Component {
       return true;
     }
     ///////
-    axios.get(`/table/${params.restoTableId}`)
+    axios.get(`/display_data/table/${params.restoTableId}`)
     .then(result=>{
 
       this.setState({
         tableOrders: result.data.dishes,
         tableNumber: result.data.table_number
       })
-      axios.get(`/menu/${result.data.restaurant_id}`)
+      axios.get(`/display_data/menu/${result.data.restaurant_id}`)
       .then(response =>{
         var x = response.data
         if(!isEmpty(this.state.tableOrders)){
@@ -171,14 +169,14 @@ class Menu extends Component {
         return true;
       }
       ///////
-      axios.get(`/table/${params.restoTableId}`)
+      axios.get(`/display_data/table/${params.restoTableId}`)
       .then(result=>{
 
         this.setState({
           tableOrders: result.data.dishes,
           tableNumber: result.data.table_number
         })
-        axios.get(`/menu/${result.data.restaurant_id}`)
+        axios.get(`/display_data/menu/${result.data.restaurant_id}`)
         .then(response =>{
           var x =response.data
           if(!isEmpty(this.state.tableOrders)){
@@ -197,7 +195,6 @@ class Menu extends Component {
             var unique = menuList.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })
-            console.log("final: ",unique)
             this.setState({
               restaurantMenuDisplay: unique
             })

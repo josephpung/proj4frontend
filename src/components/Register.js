@@ -19,9 +19,9 @@ class Register extends Component {
   }
 
   submitDetails = (e) =>{
-    axios.post('/register',this.state.submitObj)
+    axios.post('/authentication/register',this.state.submitObj)
     .then(res=>{
-      console.log(res);
+      // console.log(res);
     })
   }
   render () {

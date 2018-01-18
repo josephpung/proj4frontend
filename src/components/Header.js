@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom'
 
-import { Navbar,NavItem, Dropdown } from 'react-materialize';
+import { Navbar } from 'react-materialize';
 
 import { connect } from 'react-redux'
 import { logout } from '../actions/userAction'

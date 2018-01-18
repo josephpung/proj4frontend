@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Icon} from 'react-materialize'
+// import { Icon} from 'react-materialize'
 import axios from 'axios'
 
 
@@ -15,9 +15,8 @@ class Home extends Component {
   }
 }
   componentWillMount(){
-    console.log(this.props.user);
     var temp = []
-    axios.get('/main')
+    axios.get('/display_data/main')
     .then(response=>{
       temp = response.data.resto
       this.setState({
@@ -40,8 +39,8 @@ class Home extends Component {
                   <Link to={"/restaurant/"+post._id}>
                   <span className="card-title">{ post.name }</span>
                   </Link>
-                  <p><Icon tiny>info_outline</Icon> { post.cuisine }</p>
-                  <p><Icon tiny>nature_people</Icon> { post.address }</p>
+                  <p>{ post.cuisine }</p>
+                  <p>{ post.address }</p>
                 </div>
               </div>
             </div>
